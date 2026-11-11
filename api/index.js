@@ -78,6 +78,19 @@ router.get('/content', async (req, res) => {
           data.en.brand.workingHours = data.vi.brand.workingHours;
         }
       }
+
+      // Đảm bảo cấu trúc menu tiếng Anh có mục Pricing và khớp 1:1 với tiếng Việt
+      if (data.vi.nav && (!data.en.nav || !data.en.nav.some((i) => i.link === '#pricing'))) {
+        data.en.nav = [
+          { label: 'Home', link: '#hero' },
+          { label: 'About Us', link: '#about' },
+          { label: 'IT Services', link: '#services', badge: 'Hot', badgeColor: 'red' },
+          { label: 'Projects', link: '#projects' },
+          { label: 'Pricing', link: '#pricing' },
+          { label: 'FAQ', link: '#faqs' },
+          { label: 'Contact', link: '#contact' }
+        ];
+      }
     }
     res.json(data || {});
   } catch (err) {
@@ -466,6 +479,17 @@ router.post('/admin/menu', requireAuth('content.menu'), async (req, res) => {
     const content = (await store.get('content')) || {};
     if (!content.vi) content.vi = {};
     content.vi.nav = nav;
+
+    // Đồng bộ nhãn badge sang English nav tương ứng
+    if (content.en && Array.isArray(content.en.nav)) {
+      nav.forEach((viItem) => {
+        const enItem = content.en.nav.find((e) => e.link === viItem.link);
+        if (enItem) {
+          enItem.badge = viItem.badge || '';
+          enItem.badgeColor = viItem.badgeColor || 'red';
+        }
+      });
+    }
 
     await store.set('content', content);
     res.json({ success: true, nav: content.vi.nav });

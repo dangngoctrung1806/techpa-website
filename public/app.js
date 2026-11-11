@@ -99,6 +99,36 @@ function renderContent() {
   setHtml('projectsTitle', `${ui.projectsTitle} <span class="highlight-gold">${ui.projectsTitleHighlight}</span>`);
   setText('btnViewAllProjects', ui.btnViewAllProjects);
 
+  // Pricing Section Bilingual
+  setText('pricingTag', currentLang === 'en' ? 'PRICING & PACKAGES' : 'BẢNG GIÁ & GÓI TRIỂN KHAI');
+  setHtml('pricingTitle', currentLang === 'en'
+    ? 'Choose the Solution Plan <span class="highlight-gold">Tailored to Your Scale</span>'
+    : 'Lựa Chọn Gói Giải Pháp <span class="highlight-gold">Phù Hợp Quy Mô</span>');
+  setText('pricingDesc', currentLang === 'en'
+    ? 'Transparent cost model optimizing enterprise technology infrastructure and cybersecurity operating overhead at every milestone.'
+    : 'Mô hình chi phí minh bạch, tối ưu chi phí vận hành hạ tầng công nghệ và bảo mật theo từng giai đoạn phát triển của doanh nghiệp.');
+
+  setText('plan1Tag', currentLang === 'en' ? 'Startup & SMB' : 'Doanh nghiệp vừa & nhỏ');
+  setText('plan1Title', currentLang === 'en' ? 'Digital Launchpad (Startup)' : 'Khởi Động Số (Startup & SMB)');
+  setText('plan1Desc', currentLang === 'en' ? 'Ideal for companies with under 50 employees establishing foundational cloud and security.' : 'Tối ưu cho doanh nghiệp dưới 50 nhân sự cần số hoá vận hành cơ bản.');
+  setText('plan1Price', currentLang === 'en' ? 'From $650' : 'Từ 15.000.000đ');
+  setText('plan1Sub', currentLang === 'en' ? '/ project or month' : '/ dự án hoặc tháng');
+  setText('plan1Cta', currentLang === 'en' ? 'Select Plan' : 'Chọn Gói Tư Vấn');
+
+  setText('plan2Tag', currentLang === 'en' ? 'Most Popular ★' : 'Phổ Biến Nhất ★');
+  setText('plan2Title', currentLang === 'en' ? 'Enterprise Growth' : 'Tăng Tốc Số (Enterprise Growth)');
+  setText('plan2Desc', currentLang === 'en' ? 'Full-stack cloud migration, Zero-Trust security, customized ERP, and 24/7 SOC monitoring.' : 'Giải pháp chuyển dịch đám mây toàn diện, bảo mật Zero-Trust & SOC 24/7.');
+  setText('plan2Price', currentLang === 'en' ? 'From $1,900' : 'Từ 45.000.000đ');
+  setText('plan2Sub', currentLang === 'en' ? '/ project or month' : '/ dự án hoặc tháng');
+  setText('plan2Cta', currentLang === 'en' ? 'Request Consultation' : 'Đăng Ký Tư Vấn Ngay');
+
+  setText('plan3Tag', currentLang === 'en' ? 'Enterprise & Corporate' : 'Tập đoàn & Quy mô lớn');
+  setText('plan3Title', currentLang === 'en' ? 'Custom Architecture' : 'Kiến Trúc Chuyên Biệt (Custom Architecture)');
+  setText('plan3Desc', currentLang === 'en' ? 'Tailor-made multi-cloud ecosystem, AI automation, proprietary ERP, and dedicated 24/7 SLA.' : 'Thiết kế hệ sinh thái công nghệ riêng biệt, bảo mật ngân hàng và chuỗi đa chi nhánh.');
+  setText('plan3Price', currentLang === 'en' ? 'Tailored Quote' : 'Thiết Kế Riêng');
+  setText('plan3Sub', currentLang === 'en' ? 'Based on audit scope' : 'Theo yêu cầu khảo sát');
+  setText('plan3Cta', currentLang === 'en' ? 'Contact Solutions Expert' : 'Liên Hệ Chuyên Gia');
+
   // FAQ Section
   setText('faqTag', ui.faqTag);
   setHtml('faqTitle', `${ui.faqTitle} <span class="highlight-gold">${ui.faqTitleHighlight}</span>`);
@@ -358,6 +388,62 @@ document.getElementById('contactForm')?.addEventListener('submit', async (e) => 
   } finally {
     btn.disabled = false;
     btn.textContent = currentLang === 'en' ? 'Submit Consultation Request' : 'Gửi yêu cầu tư vấn';
+  }
+});
+
+// Chọn gói Pricing và tự động cuộn xuống form liên hệ
+function selectPricingPlan(planName) {
+  const serviceSelect = document.getElementById('contactServiceSelect');
+  if (serviceSelect) {
+    let matched = false;
+    for (let i = 0; i < serviceSelect.options.length; i++) {
+      if (serviceSelect.options[i].text.toLowerCase().includes(planName.split(' ')[0].toLowerCase())) {
+        serviceSelect.selectedIndex = i;
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) {
+      const opt = new Option(planName, planName, true, true);
+      serviceSelect.add(opt, 0);
+    }
+  }
+
+  const msgArea = document.getElementById('contactMessageInput');
+  if (msgArea && !msgArea.value) {
+    msgArea.value = currentLang === 'en'
+      ? `We would like to request detailed consultation & quote for the [${planName}] package.`
+      : `Chúng tôi quan tâm và muốn nhận tư vấn chi tiết cho gói [${planName}].`;
+  }
+
+  const contactSection = document.getElementById('contact');
+  if (contactSection) {
+    const headerHeight = document.querySelector('.site-header')?.offsetHeight || 80;
+    const top = contactSection.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+}
+
+// Xử lý cuộn mượt mà chuẩn xác cho toàn bộ các liên kết menu trên đầu trang
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('a[href^="#"]');
+  if (!link) return;
+  const href = link.getAttribute('href');
+  if (!href || href === '#') return;
+
+  const targetEl = document.querySelector(href);
+  if (targetEl) {
+    e.preventDefault();
+    const header = document.querySelector('.site-header');
+    const headerHeight = header ? header.offsetHeight : 80;
+    const top = targetEl.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+    window.scrollTo({ top, behavior: 'smooth' });
+
+    // Cập nhật trạng thái active cho menu
+    document.querySelectorAll('.main-nav .nav-link').forEach((a) => a.classList.remove('active'));
+    if (link.classList.contains('nav-link')) {
+      link.classList.add('active');
+    }
   }
 });
 

@@ -14,8 +14,7 @@
     "nav": [
       {
         "label": "Trang chủ",
-        "link": "#hero",
-        "badge": "Hot"
+        "link": "#hero"
       },
       {
         "label": "Về chúng tôi",
@@ -24,11 +23,8 @@
       {
         "label": "Dịch vụ IT",
         "link": "#services",
-        "hasChildren": true
-      },
-      {
-        "label": "Giải pháp",
-        "link": "#features"
+        "badge": "Hot",
+        "badgeColor": "red"
       },
       {
         "label": "Dự án",
@@ -39,8 +35,8 @@
         "link": "#pricing"
       },
       {
-        "label": "Tin tức",
-        "link": "#blog"
+        "label": "Hỏi đáp",
+        "link": "#faqs"
       },
       {
         "label": "Liên hệ",
@@ -314,9 +310,7 @@
     "nav": [
       {
         "label": "Home",
-        "link": "#hero",
-        "badge": "Hot",
-        "badgeColor": "red"
+        "link": "#hero"
       },
       {
         "label": "About Us",
@@ -324,15 +318,17 @@
       },
       {
         "label": "IT Services",
-        "link": "#services"
+        "link": "#services",
+        "badge": "Hot",
+        "badgeColor": "red"
       },
       {
-        "label": "Solutions",
-        "link": "#services"
-      },
-      {
-        "label": "Case Studies",
+        "label": "Projects",
         "link": "#projects"
+      },
+      {
+        "label": "Pricing",
+        "link": "#pricing"
       },
       {
         "label": "FAQ",

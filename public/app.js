@@ -16,6 +16,16 @@ function getIconSvg(name) {
   return `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${SVG_ICONS[name] || SVG_ICONS.cloud}</svg>`;
 }
 
+function escapeHtml(str) {
+  return String(str || '').replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[c]));
+}
+
 function setLanguage(lang) {
   currentLang = lang;
   localStorage.setItem('techpa_lang', lang);
@@ -49,6 +59,17 @@ function renderContent() {
   if (!allContent) return;
   const data = allContent[currentLang] || allContent.vi || allContent;
   const ui = data.ui || {};
+
+  // Navigation Links (Rendered first so header menu is always instant)
+  const mainNav = document.getElementById('mainNav');
+  if (mainNav && data.nav) {
+    mainNav.innerHTML = data.nav.map((item, idx) => `
+      <a href="${item.link}" class="nav-link ${idx === 0 ? 'active' : ''}">
+        ${item.label}
+        ${item.badge ? `<span class="nav-badge ${item.badgeColor || ''}">${item.badge}</span>` : ''}
+      </a>
+    `).join('');
+  }
 
   // Document title
   document.title = `${data.brand.name} - ${data.brand.tagline}`;
@@ -239,17 +260,6 @@ function renderContent() {
       <li><a href="#faqs">Câu hỏi thường gặp</a></li>
       <li><a href="#contact">Liên hệ hợp tác</a></li>
     `;
-  }
-
-  // Navigation Links
-  const mainNav = document.getElementById('mainNav');
-  if (mainNav && data.nav) {
-    mainNav.innerHTML = data.nav.map((item, idx) => `
-      <a href="${item.link}" class="nav-link ${idx === 0 ? 'active' : ''}">
-        ${item.label}
-        ${item.badge ? `<span class="nav-badge ${item.badgeColor || ''}">${item.badge}</span>` : ''}
-      </a>
-    `).join('');
   }
 
   // Floating Buttons

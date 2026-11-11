@@ -1108,8 +1108,38 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (max-width: 768px) {
+  .site-header {
+    height: auto;
+    padding: 8px 0;
+  }
+  .header-flex {
+    flex-wrap: wrap;
+    height: auto;
+    gap: 10px;
+  }
   .main-nav {
+    display: flex;
+    overflow-x: auto;
+    width: 100%;
+    padding: 6px 0;
+    gap: 12px;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .main-nav::-webkit-scrollbar {
     display: none;
+  }
+  .main-nav .nav-link {
+    font-size: 13px;
+    padding: 5px 12px;
+    background: #f1f5f9;
+    border-radius: 20px;
+  }
+  .main-nav .nav-link.active {
+    background: #fffbeb;
+    color: var(--primary);
+    font-weight: 700;
   }
   .services-grid, .projects-grid, .testimonials-grid, .footer-grid {
     grid-template-columns: 1fr;

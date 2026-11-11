@@ -49,6 +49,14 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg>
         <span>Dự Án Tiêu Biểu</span>
       </a>
+      <a href="#pricing" class="side-link" data-tab="pricing" data-perm="content.pricing">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+        <span>Gói Bảng Giá & Chi Phí</span>
+      </a>
+      <a href="#blog" class="side-link" data-tab="blog" data-perm="content.blog">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        <span>Tin Tức & Bài Viết</span>
+      </a>
       <a href="#socials" class="side-link" data-tab="socials" data-perm="content.socials">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
         <span>Kênh Mạng Xã Hội</span>
@@ -244,6 +252,52 @@
           </div>
           <div class="projects-list-admin" id="adminProjectsList">
             <!-- Rendered by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB PRICING: BẢNG GIÁ & GÓI TRIỂN KHAI -->
+      <section id="tab-pricing" class="tab-pane">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Quản Trị Các Gói Bảng Giá & Chi Phí Giải Pháp</h3>
+              <p class="card-sub">Thêm, sửa các gói giá công nghệ hiển thị tại trang chủ</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btnOpenNewPricing">Thêm gói giá mới +</button>
+          </div>
+          <div class="services-list-admin" id="adminPricingList">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB BLOG: QUẢN LÝ BÀI VIẾT & TIN TỨC -->
+      <section id="tab-blog" class="tab-pane">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Quản Trị Tin Tức, Xu Hướng & Bài Viết Chuyển Đổi Số</h3>
+              <p class="card-sub">Các bài viết chuyên sâu về Cloud, Cyber Security, ERP và AI</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btnOpenNewBlog">Viết bài mới +</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Ảnh</th>
+                  <th>Tiêu đề bài viết</th>
+                  <th>Chuyên mục</th>
+                  <th>Tác giả</th>
+                  <th>Ngày đăng</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="adminBlogTableBody">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -486,6 +540,107 @@
     </div>
   </div>
 
-  <script src="admin.js"></script>
+  <!-- Modal Add/Edit Pricing Plan -->
+  <div class="modal" id="pricingModal" hidden>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalPricingTitle">Thêm Gói Bảng Giá Mới</h3>
+        <button class="close-btn" onclick="closeModals()">✕</button>
+      </div>
+      <form id="pricingForm">
+        <input type="hidden" id="pricingEditId">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tên gói giải pháp *</label>
+            <input type="text" id="pricingTitle" required placeholder="VD: Khởi Động Số (Startup & SMB)">
+          </div>
+          <div class="form-group">
+            <label>Nhãn đối tượng *</label>
+            <input type="text" id="pricingTag" required placeholder="VD: Doanh nghiệp vừa & nhỏ">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Mức giá hiển thị *</label>
+            <input type="text" id="pricingPrice" required placeholder="VD: Từ 15.000.000đ hoặc Thiết Kế Riêng">
+          </div>
+          <div class="form-group">
+            <label>Ghi chú chu kỳ giá</label>
+            <input type="text" id="pricingSub" placeholder="VD: / dự án hoặc tháng">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Mô tả ngắn gọn</label>
+          <textarea id="pricingDesc" rows="2" placeholder="Tối ưu cho doanh nghiệp dưới 50 nhân sự..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Các tính năng / quyền lợi gói (cách nhau bởi dấu phẩy)</label>
+          <textarea id="pricingFeatures" rows="3" placeholder="Tư vấn kiến trúc Cloud, Cấu hình M365, Sao lưu Cloud Backup, Hỗ trợ 24/7"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Gói nổi bật (Hot/Featured)</label>
+            <select id="pricingFeatured" class="form-select" style="width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;">
+              <option value="false">Gói tiêu chuẩn</option>
+              <option value="true">Gói nổi bật nhất (Khung viền vàng ★)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Chữ trên nút bấm (CTA)</label>
+            <input type="text" id="pricingCta" placeholder="Chọn Gói Tư Vấn">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModals()">Hủy</button>
+          <button type="submit" class="btn btn-primary" id="btnSavePricing">Lưu Gói Giá</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Add/Edit Blog Post -->
+  <div class="modal" id="adminBlogModal" hidden>
+    <div class="modal-card" style="max-width: 680px; max-height: 85vh; overflow-y: auto;">
+      <div class="modal-header">
+        <h3 id="modalBlogAdminTitle">Viết Bài Tin Tức Mới</h3>
+        <button class="close-btn" onclick="closeModals()">✕</button>
+      </div>
+      <form id="adminBlogForm">
+        <input type="hidden" id="blogEditId">
+        <div class="form-group">
+          <label>Tiêu đề bài viết *</label>
+          <input type="text" id="blogTitleInput" required placeholder="VD: Chiến Lược Dịch Chuyển Cloud Tiết Kiệm 35% Chi Phí">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Chuyên mục *</label>
+            <input type="text" id="blogCatInput" required placeholder="Cloud Computing / Cyber Security / AI">
+          </div>
+          <div class="form-group">
+            <label>Tác giả</label>
+            <input type="text" id="blogAuthorInput" placeholder="Chuyên gia TechPA">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Link ảnh đại diện bài viết (URL) *</label>
+          <input type="url" id="blogImageInput" required placeholder="https://images.unsplash.com/photo-...">
+        </div>
+        <div class="form-group">
+          <label>Đoạn tóm tắt ngắn (Lead / Excerpt) *</label>
+          <textarea id="blogSummaryInput" rows="2" required placeholder="Tóm tắt 1-2 câu nêu bật giá trị bài viết..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Nội dung chi tiết bài viết *</label>
+          <textarea id="blogContentInput" rows="6" required placeholder="Nội dung chuyên sâu của bài viết chia sẻ cho doanh nghiệp..."></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModals()">Hủy</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveBlog">Lưu Bài Viết</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="admin.js?v=20261111"></script>
 </body>
 </html>

@@ -99,7 +99,7 @@ function renderContent() {
   setHtml('projectsTitle', `${ui.projectsTitle} <span class="highlight-gold">${ui.projectsTitleHighlight}</span>`);
   setText('btnViewAllProjects', ui.btnViewAllProjects);
 
-  // Pricing Section Bilingual
+  // Pricing Section Bilingual & Dynamic Render
   setText('pricingTag', currentLang === 'en' ? 'PRICING & PACKAGES' : 'BẢNG GIÁ & GÓI TRIỂN KHAI');
   setHtml('pricingTitle', currentLang === 'en'
     ? 'Choose the Solution Plan <span class="highlight-gold">Tailored to Your Scale</span>'
@@ -108,26 +108,58 @@ function renderContent() {
     ? 'Transparent cost model optimizing enterprise technology infrastructure and cybersecurity operating overhead at every milestone.'
     : 'Mô hình chi phí minh bạch, tối ưu chi phí vận hành hạ tầng công nghệ và bảo mật theo từng giai đoạn phát triển của doanh nghiệp.');
 
-  setText('plan1Tag', currentLang === 'en' ? 'Startup & SMB' : 'Doanh nghiệp vừa & nhỏ');
-  setText('plan1Title', currentLang === 'en' ? 'Digital Launchpad (Startup)' : 'Khởi Động Số (Startup & SMB)');
-  setText('plan1Desc', currentLang === 'en' ? 'Ideal for companies with under 50 employees establishing foundational cloud and security.' : 'Tối ưu cho doanh nghiệp dưới 50 nhân sự cần số hoá vận hành cơ bản.');
-  setText('plan1Price', currentLang === 'en' ? 'From $650' : 'Từ 15.000.000đ');
-  setText('plan1Sub', currentLang === 'en' ? '/ project or month' : '/ dự án hoặc tháng');
-  setText('plan1Cta', currentLang === 'en' ? 'Select Plan' : 'Chọn Gói Tư Vấn');
+  const pricingGrid = document.getElementById('pricingGrid');
+  if (pricingGrid && data.pricing) {
+    pricingGrid.innerHTML = data.pricing.map((plan) => `
+      <div class="pricing-card ${plan.featured ? 'featured' : ''}">
+        <div class="pricing-badge ${plan.featured ? 'featured-badge' : ''}">${escapeHtml(plan.tag || '')}</div>
+        <h3 class="plan-title">${escapeHtml(plan.title)}</h3>
+        <p class="plan-desc">${escapeHtml(plan.desc || '')}</p>
+        <div class="plan-price">
+          <span class="price-val">${escapeHtml(plan.price)}</span>
+          <span class="price-sub">${escapeHtml(plan.sub || '')}</span>
+        </div>
+        <ul class="plan-features">
+          ${(plan.features || []).map((f) => `<li>✓ ${escapeHtml(f)}</li>`).join('')}
+        </ul>
+        <a href="#contact" class="btn ${plan.featured ? 'btn-primary' : 'btn-outline'} btn-block" onclick="selectPricingPlan('${escapeHtml(plan.title)}')">
+          ${escapeHtml(plan.cta || (currentLang === 'en' ? 'Select Plan' : 'Chọn Gói Tư Vấn'))}
+        </a>
+      </div>
+    `).join('');
+  }
 
-  setText('plan2Tag', currentLang === 'en' ? 'Most Popular ★' : 'Phổ Biến Nhất ★');
-  setText('plan2Title', currentLang === 'en' ? 'Enterprise Growth' : 'Tăng Tốc Số (Enterprise Growth)');
-  setText('plan2Desc', currentLang === 'en' ? 'Full-stack cloud migration, Zero-Trust security, customized ERP, and 24/7 SOC monitoring.' : 'Giải pháp chuyển dịch đám mây toàn diện, bảo mật Zero-Trust & SOC 24/7.');
-  setText('plan2Price', currentLang === 'en' ? 'From $1,900' : 'Từ 45.000.000đ');
-  setText('plan2Sub', currentLang === 'en' ? '/ project or month' : '/ dự án hoặc tháng');
-  setText('plan2Cta', currentLang === 'en' ? 'Request Consultation' : 'Đăng Ký Tư Vấn Ngay');
+  // Blog & News Section
+  setText('blogTag', currentLang === 'en' ? 'INSIGHTS & TECH TRENDS' : 'TIN TỨC & XU HƯỚNG CÔNG NGHỆ');
+  setHtml('blogTitle', currentLang === 'en'
+    ? 'Expert Perspective <span class="highlight-gold">& Digital Briefs</span>'
+    : 'Góc Nhìn Chuyên Gia <span class="highlight-gold">& Bản Tin Chuyển Đổi Số</span>');
+  setText('blogDesc', currentLang === 'en'
+    ? 'Stay ahead with the latest enterprise technology insights on Cloud, Zero-Trust, ERP, and AI Automation.'
+    : 'Cập nhật xu hướng công nghệ mới nhất về Cloud, An toàn thông tin, ERP và Trí tuệ nhân tạo (AI).');
 
-  setText('plan3Tag', currentLang === 'en' ? 'Enterprise & Corporate' : 'Tập đoàn & Quy mô lớn');
-  setText('plan3Title', currentLang === 'en' ? 'Custom Architecture' : 'Kiến Trúc Chuyên Biệt (Custom Architecture)');
-  setText('plan3Desc', currentLang === 'en' ? 'Tailor-made multi-cloud ecosystem, AI automation, proprietary ERP, and dedicated 24/7 SLA.' : 'Thiết kế hệ sinh thái công nghệ riêng biệt, bảo mật ngân hàng và chuỗi đa chi nhánh.');
-  setText('plan3Price', currentLang === 'en' ? 'Tailored Quote' : 'Thiết Kế Riêng');
-  setText('plan3Sub', currentLang === 'en' ? 'Based on audit scope' : 'Theo yêu cầu khảo sát');
-  setText('plan3Cta', currentLang === 'en' ? 'Contact Solutions Expert' : 'Liên Hệ Chuyên Gia');
+  const blogGrid = document.getElementById('blogGrid');
+  if (blogGrid && data.blog) {
+    blogGrid.innerHTML = data.blog.map((post) => `
+      <div class="blog-card" onclick="openBlogPost('${post.id}')">
+        <div class="blog-thumb">
+          <img src="${escapeHtml(post.image)}" alt="${escapeHtml(post.title)}" loading="lazy">
+          <span class="blog-cat-badge">${escapeHtml(post.category)}</span>
+        </div>
+        <div class="blog-body">
+          <div class="blog-meta">
+            <span>📅 ${escapeHtml(post.date || '')}</span>
+            <span>⏱️ ${escapeHtml(post.readTime || '5 phút')}</span>
+          </div>
+          <h3 class="blog-title">${escapeHtml(post.title)}</h3>
+          <p class="blog-summary">${escapeHtml(post.summary)}</p>
+          <span class="blog-link">
+            ${currentLang === 'en' ? 'Read Article' : 'Đọc Chi Tiết'} →
+          </span>
+        </div>
+      </div>
+    `).join('');
+  }
 
   // FAQ Section
   setText('faqTag', ui.faqTag);
@@ -337,6 +369,9 @@ function renderContent() {
       </div>
     </div>
   `).join('');
+
+  // Tự động kích hoạt ScrollSpy theo dõi vị trí cuộn trang
+  initScrollSpy();
 }
 
 function setText(id, text) {
@@ -446,6 +481,73 @@ document.addEventListener('click', (e) => {
     }
   }
 });
+
+// ScrollSpy: Tự động đổi mục menu active trên đầu trang khi cuộn qua từng phần
+function initScrollSpy() {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.main-nav .nav-link');
+  if (!sections.length || !navLinks.length) return;
+
+  const scrollHandler = () => {
+    const scrollY = window.pageYOffset;
+    const header = document.querySelector('.site-header');
+    const headerHeight = header ? header.offsetHeight : 80;
+
+    let currentSectionId = '';
+    sections.forEach((section) => {
+      const sectionTop = section.offsetTop - headerHeight - 50;
+      const sectionHeight = section.offsetHeight;
+      if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+        currentSectionId = section.getAttribute('id');
+      }
+    });
+
+    if (currentSectionId) {
+      navLinks.forEach((link) => {
+        const href = link.getAttribute('href');
+        if (href === `#${currentSectionId}`) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+  };
+
+  if (window._scrollSpyHandler) {
+    window.removeEventListener('scroll', window._scrollSpyHandler);
+  }
+  window._scrollSpyHandler = scrollHandler;
+  window.addEventListener('scroll', scrollHandler, { passive: true });
+}
+
+// Mở modal đọc chi tiết bài viết
+function openBlogPost(id) {
+  if (!allContent) return;
+  const data = allContent[currentLang] || allContent.vi || allContent;
+  const post = (data.blog || []).find((b) => b.id === id);
+  if (!post) return;
+
+  const catEl = document.getElementById('modalBlogCat');
+  const titleEl = document.getElementById('modalBlogTitle');
+  const metaEl = document.getElementById('modalBlogMeta');
+  const imgEl = document.getElementById('modalBlogImg');
+  const contentEl = document.getElementById('modalBlogContent');
+
+  if (catEl) catEl.textContent = post.category || 'TechPA News';
+  if (titleEl) titleEl.textContent = post.title;
+  if (metaEl) metaEl.textContent = `${currentLang === 'en' ? 'By' : 'Tác giả'}: ${post.author || 'TechPA'} • 📅 ${post.date || ''} • ⏱️ ${post.readTime || '5 phút'}`;
+  if (imgEl) imgEl.src = post.image;
+  if (contentEl) contentEl.textContent = post.content || post.summary;
+
+  const modal = document.getElementById('blogModal');
+  if (modal) modal.hidden = false;
+}
+
+function closeBlogModal() {
+  const modal = document.getElementById('blogModal');
+  if (modal) modal.hidden = true;
+}
 
 // Init on load
 document.addEventListener('DOMContentLoaded', loadInitialData);

@@ -35,6 +35,10 @@
         "link": "#pricing"
       },
       {
+        "label": "Tin tức",
+        "link": "#blog"
+      },
+      {
         "label": "Hỏi đáp",
         "link": "#faqs"
       },
@@ -293,7 +297,94 @@
       "footerNewsletterDesc": "Nhận các bản tin cập nhật xu hướng công nghệ & bảo mật mới nhất hàng tuần.",
       "footerNewsletterBtn": "Gửi",
       "footerCopyright": "© 2026 TechPA Technology Solutions. Bản quyền đã được bảo lưu."
-    }
+    },
+    "pricing": [
+      {
+        "id": "price-1",
+        "tag": "Doanh nghiệp vừa & nhỏ",
+        "title": "Khởi Động Số (Startup & SMB)",
+        "desc": "Tối ưu cho doanh nghiệp dưới 50 nhân sự cần số hoá vận hành và hạ tầng cơ bản.",
+        "price": "Từ 15.000.000đ",
+        "sub": "/ dự án hoặc tháng",
+        "features": [
+          "Khảo sát hiện trạng & tư vấn kiến trúc Cloud",
+          "Cấu hình Microsoft 365 / Google Workspace chuẩn",
+          "Sao lưu dữ liệu tự động Cloud Backup định kỳ",
+          "Hỗ trợ kỹ thuật qua Hotline trong giờ làm việc"
+        ],
+        "featured": false,
+        "cta": "Chọn Gói Tư Vấn"
+      },
+      {
+        "id": "price-2",
+        "tag": "Phổ Biến Nhất ★",
+        "title": "Tăng Tốc Số (Enterprise Growth)",
+        "desc": "Giải pháp chuyển dịch đám mây toàn diện, bảo mật Zero-Trust & SOC 24/7.",
+        "price": "Từ 45.000.000đ",
+        "sub": "/ dự án hoặc tháng",
+        "features": [
+          "Dịch chuyển hạ tầng lên AWS / Azure / GCP",
+          "Giám sát an ninh mạng SOC 24/7 & Diệt Ransomware",
+          "Tối ưu hóa chi phí điện toán đám mây (FinOps giảm 35%)",
+          "Phần mềm quản trị nội bộ ERP / CRM theo yêu cầu",
+          "Cam kết SLA phản hồi sự cố trong 15 phút"
+        ],
+        "featured": true,
+        "cta": "Đăng Ký Tư Vấn Ngay"
+      },
+      {
+        "id": "price-3",
+        "tag": "Tập đoàn & Quy mô lớn",
+        "title": "Kiến Trúc Chuyên Biệt (Custom Architecture)",
+        "desc": "Thiết kế hệ sinh thái công nghệ riêng biệt, bảo mật ngân hàng và chuỗi đa chi nhánh.",
+        "price": "Thiết Kế Riêng",
+        "sub": "Theo yêu cầu khảo sát",
+        "features": [
+          "Hệ thống Multi-Cloud & On-premise Hybrid",
+          "Tích hợp trí tuệ nhân tạo AI & Tự động hoá RPA",
+          "Đội ngũ kỹ sư trưởng (Chief Architect) chuyên trách",
+          "Bàn giao mã nguồn trọn đời & Đào tạo nội bộ",
+          "Bảo trì tận nơi và trực phòng NOC 24/7/365"
+        ],
+        "featured": false,
+        "cta": "Liên Hệ Chuyên Gia"
+      }
+    ],
+    "blog": [
+      {
+        "id": "post-1",
+        "title": "Chiến Lược Dịch Chuyển Cloud & Tối Ưu FinOps Tiết Kiệm 35% Chi Phí Năm 2026",
+        "category": "Cloud Computing",
+        "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
+        "summary": "Hướng dẫn lộ trình dịch chuyển máy chủ on-premise lên AWS/Azure và các phương pháp kiểm soát lãng phí tài nguyên đám mây hiệu quả cho doanh nghiệp.",
+        "content": "Trong bối cảnh kinh tế hiện đại, việc chuyển đổi hạ tầng từ máy chủ vật lý on-premise lên điện toán đám mây (Cloud) không chỉ giúp doanh nghiệp linh hoạt mở rộng mà còn loại bỏ hoàn toàn chi phí bảo trì phần cứng cồng kềnh. Bài viết này phân tích phương pháp FinOps giúp doanh nghiệp kiểm soát tài nguyên và tối ưu hóa 35% hóa đơn Cloud hàng tháng.",
+        "author": "TechPA Cloud Team",
+        "date": "10/03/2026",
+        "readTime": "5 phút đọc"
+      },
+      {
+        "id": "post-2",
+        "title": "Bảo Mật Zero-Trust & Mô Hình Trung Tâm Giám Sát SOC 24/7 Đối Phó Ransomware",
+        "category": "Cyber Security",
+        "image": "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80",
+        "summary": "Tại sao mô hình tường lửa truyền thống đã lỗi thời và cách kiến trúc Zero-Trust kết hợp EDR ngăn chặn triệt để mã độc tống tiền ngay từ cổng vào.",
+        "content": "Các cuộc tấn công mạng nhắm vào doanh nghiệp sản xuất và tài chính đang ngày càng tinh vi với các biến thể Ransomware nguy hiểm. Kiến trúc Zero-Trust (Không tin tưởng bất kỳ ai, luôn luôn xác thực) kết hợp cùng hệ thống giám sát SIEM/EDR của trung tâm SOC 24/7 là lá chắn vững chắc bảo vệ tài sản số doanh nghiệp.",
+        "author": "Chuyên Gia An Ninh Mạng",
+        "date": "05/03/2026",
+        "readTime": "7 phút đọc"
+      },
+      {
+        "id": "post-3",
+        "title": "Ứng Dụng AI & RPA: Tự Động Hóa 70% Tác Vụ Lặp Lại Trong Vận Hành Doanh Nghiệp",
+        "category": "AI Automation",
+        "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+        "summary": "Khám phá cách các doanh nghiệp bán lẻ và logistics tích hợp trợ lý AI tra cứu nội bộ và phần mềm Robot RPA để xử lý đơn hàng, đối soát hóa đơn tức thì.",
+        "content": "Trí tuệ nhân tạo (AI) và Tự động hóa quy trình bằng robot (RPA) đang tái định hình cách thức vận hành của các phòng ban kế toán, CSKH và chuỗi cung ứng. Hệ thống cho phép bóc tách chứng từ OCR chuẩn xác 99.8% và rút ngắn thời gian xử lý nghiệp vụ từ nhiều giờ xuống còn vài giây.",
+        "author": "Ban Công Nghệ TechPA",
+        "date": "28/02/2026",
+        "readTime": "6 phút đọc"
+      }
+    ]
   },
   "en": {
     "brand": {
@@ -304,7 +395,7 @@
       "hotline": "0934.310.777",
       "email": "support@techpa.vn",
       "address": "Số 4 Lê Phụ Trần, Phường Sơn Trà, Thành phố Đà Nẵng, Việt Nam",
-      "workingHours": "Mon - Sat: 8:00 AM - 6:00 PM (24/7 Technical Support)",
+      "workingHours": "Thứ 2 - Thứ 7: 8:00 - 18:00",
       "logoUrl": "/logo.png"
     },
     "nav": [
@@ -329,6 +420,10 @@
       {
         "label": "Pricing",
         "link": "#pricing"
+      },
+      {
+        "label": "News",
+        "link": "#blog"
       },
       {
         "label": "FAQ",
@@ -579,6 +674,93 @@
       "footerNewsletterDesc": "Subscribe to receive weekly technology trends and enterprise security insights.",
       "footerNewsletterBtn": "Subscribe",
       "footerCopyright": "© 2026 TechPA Technology Solutions. All rights reserved."
-    }
+    },
+    "pricing": [
+      {
+        "id": "price-1",
+        "tag": "Startup & SMB",
+        "title": "Digital Launchpad (Startup)",
+        "desc": "Ideal for companies with under 50 employees establishing foundational cloud and security.",
+        "price": "From $650",
+        "sub": "/ project or month",
+        "features": [
+          "Infrastructure audit & cloud architecture blueprint",
+          "Turnkey Microsoft 365 / Google Workspace setup",
+          "Automated scheduled multi-region cloud backup",
+          "Technical hotline support during standard hours"
+        ],
+        "featured": false,
+        "cta": "Select Plan"
+      },
+      {
+        "id": "price-2",
+        "tag": "Most Popular ★",
+        "title": "Enterprise Growth",
+        "desc": "Full-stack cloud migration, Zero-Trust security, customized ERP, and 24/7 SOC monitoring.",
+        "price": "From $1,900",
+        "sub": "/ project or month",
+        "features": [
+          "Workload migration to AWS / Azure / GCP",
+          "24/7 SOC cyber monitoring & Ransomware mitigation",
+          "FinOps cloud cost governance (save up to 35%)",
+          "Custom internal ERP / CRM business workflow engine",
+          "Strict 15-minute emergency SLA incident response"
+        ],
+        "featured": true,
+        "cta": "Request Consultation"
+      },
+      {
+        "id": "price-3",
+        "tag": "Enterprise & Corporate",
+        "title": "Custom Architecture",
+        "desc": "Tailor-made multi-cloud ecosystem, AI automation, proprietary ERP, and dedicated 24/7 SLA.",
+        "price": "Tailored Quote",
+        "sub": "Based on audit scope",
+        "features": [
+          "Multi-cloud & on-premise hybrid hyperconverged infrastructure",
+          "Custom internal Enterprise AI & RPA process bots",
+          "Dedicated Chief Solutions Architect assigned to account",
+          "Full lifetime source code transfer & internal team training",
+          "On-site critical hardware dispatch & 24/7/365 NOC standby"
+        ],
+        "featured": false,
+        "cta": "Contact Solutions Expert"
+      }
+    ],
+    "blog": [
+      {
+        "id": "post-1",
+        "title": "Cloud Migration Strategy & FinOps Governance: Cutting Overhead by 35%",
+        "category": "Cloud Computing",
+        "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
+        "summary": "Step-by-step roadmap for migrating legacy on-premise infrastructure to AWS/Azure while eliminating idle cloud resources.",
+        "content": "In modern business operations, migrating workloads from physical servers to the Cloud offers unparalleled agility and eliminates cumbersome hardware maintenance. This guide explores practical FinOps practices that empower finance and engineering teams to reduce monthly cloud expenditure by up to 35%.",
+        "author": "TechPA Cloud Architects",
+        "date": "March 10, 2026",
+        "readTime": "5 min read"
+      },
+      {
+        "id": "post-2",
+        "title": "Zero-Trust Architecture & 24/7 Managed SOC: Mitigating Advanced Ransomware",
+        "category": "Cyber Security",
+        "image": "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80",
+        "summary": "Why traditional perimeter firewalls are insufficient and how Zero-Trust combined with Next-Gen EDR stops lateral malware traversal.",
+        "content": "Cyberattacks targeting manufacturing and financial institutions have surged in sophistication. Implementing a strict Zero-Trust model (never trust, always verify) in tandem with 24/7 SIEM/EDR telemetry creates an impenetrable perimeter for corporate digital assets.",
+        "author": "Cyber Defense Lead",
+        "date": "March 05, 2026",
+        "readTime": "7 min read"
+      },
+      {
+        "id": "post-3",
+        "title": "Enterprise AI & RPA: Automating 70% of Repetitive Operational Tasks",
+        "category": "AI Automation",
+        "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+        "summary": "Discover how forward-thinking retail and supply chain leaders deploy conversational AI and RPA software bots for automated invoice OCR and order matching.",
+        "content": "Artificial Intelligence and Robotic Process Automation (RPA) are reshaping enterprise back-office workflows. Our automated document processing pipeline delivers 99.8% OCR precision, reducing invoice reconciliation time from hours to seconds.",
+        "author": "TechPA AI Research Lab",
+        "date": "February 28, 2026",
+        "readTime": "6 min read"
+      }
+    ]
   }
 }

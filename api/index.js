@@ -79,17 +79,40 @@ router.get('/content', async (req, res) => {
         }
       }
 
-      // Đảm bảo cấu trúc menu tiếng Anh có mục Pricing và khớp 1:1 với tiếng Việt
-      if (data.vi.nav && (!data.en.nav || !data.en.nav.some((i) => i.link === '#pricing'))) {
+      // Đảm bảo cấu trúc menu tiếng Anh có mục Pricing & Blog và khớp 1:1 với tiếng Việt
+      if (data.vi.nav) {
+        if (!data.vi.nav.some((i) => i.link === '#blog')) {
+          data.vi.nav.splice(5, 0, { label: 'Tin tức', link: '#blog' });
+        }
+      }
+      if (!data.en.nav || !data.en.nav.some((i) => i.link === '#blog')) {
         data.en.nav = [
           { label: 'Home', link: '#hero' },
           { label: 'About Us', link: '#about' },
           { label: 'IT Services', link: '#services', badge: 'Hot', badgeColor: 'red' },
           { label: 'Projects', link: '#projects' },
           { label: 'Pricing', link: '#pricing' },
+          { label: 'News', link: '#blog' },
           { label: 'FAQ', link: '#faqs' },
           { label: 'Contact', link: '#contact' }
         ];
+      }
+
+      // Đảm bảo pricing và blog có dữ liệu mẫu nếu chưa có
+      const fs = require('fs');
+      const path = require('path');
+      let needPersist = false;
+      if (!data.vi.pricing || !data.vi.blog || !data.en.pricing || !data.en.blog) {
+        try {
+          const seed = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'content.json'), 'utf8'));
+          if (!data.vi.pricing && seed.vi.pricing) { data.vi.pricing = seed.vi.pricing; needPersist = true; }
+          if (!data.vi.blog && seed.vi.blog) { data.vi.blog = seed.vi.blog; needPersist = true; }
+          if (!data.en.pricing && seed.en.pricing) { data.en.pricing = seed.en.pricing; needPersist = true; }
+          if (!data.en.blog && seed.en.blog) { data.en.blog = seed.en.blog; needPersist = true; }
+        } catch (e) {}
+      }
+      if (needPersist) {
+        await store.set('content', data).catch(() => {});
       }
     }
     res.json(data || {});
@@ -467,6 +490,155 @@ router.delete('/admin/leads/:code', requireAuth('leads.manage'), async (req, res
 });
 
 // ---------------- 5. CMS CONTENT MANAGEMENT ----------------
+
+// POST /admin/pricing (content.pricing)
+router.post('/admin/pricing', requireAuth('content.pricing'), async (req, res) => {
+  try {
+    const newPlan = req.body;
+    if (!newPlan || !newPlan.title || !newPlan.price) {
+      return res.status(400).json({ error: 'Tên gói và mức giá không được để trống.' });
+    }
+
+    const content = (await store.get('content')) || {};
+    if (!content.vi) content.vi = {};
+    if (!content.vi.pricing) content.vi.pricing = [];
+
+    newPlan.id = newPlan.id || 'price-' + Date.now();
+    content.vi.pricing.push(newPlan);
+
+    if (content.en) {
+      if (!content.en.pricing) content.en.pricing = [];
+      content.en.pricing.push({ ...newPlan });
+    }
+
+    await store.set('content', content);
+    res.json({ success: true, pricing: content.vi.pricing });
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi lưu gói bảng giá: ' + err.message });
+  }
+});
+
+// PUT /admin/pricing/:id (content.pricing)
+router.put('/admin/pricing/:id', requireAuth('content.pricing'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+    const content = (await store.get('content')) || {};
+
+    if (content.vi && content.vi.pricing) {
+      const idx = content.vi.pricing.findIndex((p) => p.id === id);
+      if (idx !== -1) {
+        content.vi.pricing[idx] = { ...content.vi.pricing[idx], ...updateData };
+      }
+    }
+    if (content.en && content.en.pricing) {
+      const idx = content.en.pricing.findIndex((p) => p.id === id);
+      if (idx !== -1) {
+        content.en.pricing[idx] = { ...content.en.pricing[idx], ...updateData };
+      }
+    }
+
+    await store.set('content', content);
+    res.json({ success: true, pricing: content.vi.pricing });
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi cập nhật gói bảng giá: ' + err.message });
+  }
+});
+
+// DELETE /admin/pricing/:id (content.pricing)
+router.delete('/admin/pricing/:id', requireAuth('content.pricing'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const content = (await store.get('content')) || {};
+
+    if (content.vi && content.vi.pricing) {
+      content.vi.pricing = content.vi.pricing.filter((p) => p.id !== id);
+    }
+    if (content.en && content.en.pricing) {
+      content.en.pricing = content.en.pricing.filter((p) => p.id !== id);
+    }
+
+    await store.set('content', content);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi xóa gói bảng giá: ' + err.message });
+  }
+});
+
+// POST /admin/blog (content.blog)
+router.post('/admin/blog', requireAuth('content.blog'), async (req, res) => {
+  try {
+    const newPost = req.body;
+    if (!newPost || !newPost.title) {
+      return res.status(400).json({ error: 'Tiêu đề bài viết không được để trống.' });
+    }
+
+    const content = (await store.get('content')) || {};
+    if (!content.vi) content.vi = {};
+    if (!content.vi.blog) content.vi.blog = [];
+
+    newPost.id = newPost.id || 'post-' + Date.now();
+    newPost.date = newPost.date || new Date().toLocaleDateString('vi-VN');
+    content.vi.blog.unshift(newPost);
+
+    if (content.en) {
+      if (!content.en.blog) content.en.blog = [];
+      content.en.blog.unshift({ ...newPost });
+    }
+
+    await store.set('content', content);
+    res.json({ success: true, blog: content.vi.blog });
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi lưu bài viết mới: ' + err.message });
+  }
+});
+
+// PUT /admin/blog/:id (content.blog)
+router.put('/admin/blog/:id', requireAuth('content.blog'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+    const content = (await store.get('content')) || {};
+
+    if (content.vi && content.vi.blog) {
+      const idx = content.vi.blog.findIndex((b) => b.id === id);
+      if (idx !== -1) {
+        content.vi.blog[idx] = { ...content.vi.blog[idx], ...updateData };
+      }
+    }
+    if (content.en && content.en.blog) {
+      const idx = content.en.blog.findIndex((b) => b.id === id);
+      if (idx !== -1) {
+        content.en.blog[idx] = { ...content.en.blog[idx], ...updateData };
+      }
+    }
+
+    await store.set('content', content);
+    res.json({ success: true, blog: content.vi.blog });
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi cập nhật bài viết: ' + err.message });
+  }
+});
+
+// DELETE /admin/blog/:id (content.blog)
+router.delete('/admin/blog/:id', requireAuth('content.blog'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const content = (await store.get('content')) || {};
+
+    if (content.vi && content.vi.blog) {
+      content.vi.blog = content.vi.blog.filter((b) => b.id !== id);
+    }
+    if (content.en && content.en.blog) {
+      content.en.blog = content.en.blog.filter((b) => b.id !== id);
+    }
+
+    await store.set('content', content);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi xóa bài viết: ' + err.message });
+  }
+});
 
 // POST /admin/menu (content.menu)
 router.post('/admin/menu', requireAuth('content.menu'), async (req, res) => {

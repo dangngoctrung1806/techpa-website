@@ -78,6 +78,7 @@ async function checkAuthAndInit() {
 function hasPermission(perm) {
   if (!currentUser) return false;
   if (currentUser.role === 'superadmin') return true;
+  if (currentUser.role === 'editor' && perm.startsWith('content.')) return true;
   return Array.isArray(currentUser.permissions) && currentUser.permissions.includes(perm);
 }
 
@@ -145,6 +146,8 @@ const TAB_TITLES = {
   menu: { title: 'Cấu Hình Menu & Nhãn Nổi Bật', sub: 'Tùy chỉnh tên menu và nhãn Hot / New / Pro' },
   services: { title: 'Quản Trị Dịch Vụ Công Nghệ', sub: 'Thêm, sửa, xóa các gói giải pháp số' },
   projects: { title: 'Quản Trị Dự Án Tiêu Biểu', sub: 'Các câu chuyện thành công và case studies' },
+  pricing: { title: 'Quản Trị Bảng Giá & Chi Phí', sub: 'Thêm, sửa, xóa các gói giải pháp và bảng giá công nghệ' },
+  blog: { title: 'Quản Trị Tin Tức & Bài Viết', sub: 'Đăng tải các bài viết chuyên sâu về Cloud, Cyber Security, ERP và AI' },
   socials: { title: 'Cấu Hình Kênh Mạng Xã Hội', sub: 'Đường dẫn Zalo, Facebook, LinkedIn, YouTube' },
   settings: { title: 'Cấu Hình Hệ Thống & Hotline', sub: 'Thông tin thương hiệu TechPA và banner ưu đãi' },
   users: { title: 'Quản Lý Tài Khoản & Phân Quyền', sub: 'Quản lý thành viên, vai trò (Roles) và quyền theo module' }
@@ -218,6 +221,8 @@ async function loadAdminData() {
     if (hasPermission('content.menu')) renderMenuConfig();
     if (hasPermission('content.services')) renderServicesList();
     if (hasPermission('content.projects')) renderProjectsList();
+    if (hasPermission('content.pricing')) renderAdminPricing();
+    if (hasPermission('content.blog')) renderAdminBlog();
     if (hasPermission('content.socials')) populateSocials();
     if (hasPermission('content.settings')) populateSettings();
   } catch (err) {
@@ -931,16 +936,323 @@ document.getElementById('settingsForm')?.addEventListener('submit', async (e) =>
   }
 });
 
-// ---------------- 12. MODAL HELPERS ----------------
+// ---------------- 12. PRICING MANAGEMENT (content.pricing) ----------------
+
+function renderAdminPricing() {
+  const list = document.getElementById('adminPricingList');
+  if (!list || !currentContent) return;
+
+  const pricing = currentContent.pricing || [];
+  const canManage = hasPermission('content.pricing');
+
+  if (pricing.length === 0) {
+    list.innerHTML = '<p style="padding:20px;color:#64748b;text-align:center;">Chưa có gói bảng giá nào. Nhấn "Thêm gói giá mới" để tạo gói đầu tiên.</p>';
+    return;
+  }
+
+  list.innerHTML = pricing.map((p) => `
+    <div class="service-admin-item" style="display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid #e2e8f0;">
+      <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+          <h4 style="margin:0;font-size:16px;font-weight:700;color:#0f172a;">${escapeHtml(p.title)}</h4>
+          <span style="background:#f1f5f9;color:#475569;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:600;">${escapeHtml(p.tag || '')}</span>
+          ${p.featured ? '<span style="background:#fef3c7;color:#b45309;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:700;">★ Nổi bật</span>' : ''}
+        </div>
+        <p style="margin:4px 0;color:#64748b;font-size:14px;">${escapeHtml(p.desc || '')}</p>
+        <div style="font-weight:800;color:#d97706;font-size:16px;margin-top:4px;">
+          ${escapeHtml(p.price)} <small style="font-weight:400;color:#64748b;font-size:13px;">${escapeHtml(p.sub || '')}</small>
+        </div>
+        <small style="display:block;margin-top:6px;color:#334155;font-size:12px;">
+          ${(p.features || []).map((f) => '✓ ' + escapeHtml(f)).join(' • ')}
+        </small>
+      </div>
+      <div style="display:flex;gap:8px;margin-left:16px;">
+        ${canManage ? `
+          <button class="btn btn-outline btn-sm" onclick="openEditPricing('${p.id}')">Sửa</button>
+          <button class="btn btn-outline btn-sm" onclick="deletePricing('${p.id}')" style="color:#ef4444;border-color:#fca5a5;">Xóa</button>
+        ` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function openNewPricing() {
+  const form = document.getElementById('pricingForm');
+  if (form) form.reset();
+  const editId = document.getElementById('pricingEditId');
+  if (editId) editId.value = '';
+  const title = document.getElementById('modalPricingTitle');
+  if (title) title.textContent = 'Thêm Gói Bảng Giá Mới';
+  const featured = document.getElementById('pricingFeatured');
+  if (featured) featured.value = 'false';
+  const modal = document.getElementById('pricingModal');
+  if (modal) modal.hidden = false;
+}
+
+function openEditPricing(id) {
+  const pricing = (currentContent && currentContent.pricing) || [];
+  const plan = pricing.find((p) => p.id === id);
+  if (!plan) return;
+
+  const form = document.getElementById('pricingForm');
+  if (form) form.reset();
+  document.getElementById('pricingEditId').value = plan.id;
+  document.getElementById('modalPricingTitle').textContent = `Chỉnh Sửa Gói: ${plan.title}`;
+  document.getElementById('pricingTitle').value = plan.title || '';
+  document.getElementById('pricingTag').value = plan.tag || '';
+  document.getElementById('pricingPrice').value = plan.price || '';
+  document.getElementById('pricingSub').value = plan.sub || '';
+  document.getElementById('pricingDesc').value = plan.desc || '';
+  document.getElementById('pricingFeatures').value = (plan.features || []).join(', ');
+  document.getElementById('pricingFeatured').value = plan.featured ? 'true' : 'false';
+  document.getElementById('pricingCta').value = plan.cta || 'Chọn Gói Tư Vấn';
+
+  document.getElementById('pricingModal').hidden = false;
+}
+
+document.getElementById('btnOpenNewPricing')?.addEventListener('click', openNewPricing);
+
+document.getElementById('pricingForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!hasPermission('content.pricing')) return;
+
+  const editId = document.getElementById('pricingEditId').value;
+  const title = document.getElementById('pricingTitle').value.trim();
+  const tag = document.getElementById('pricingTag').value.trim();
+  const price = document.getElementById('pricingPrice').value.trim();
+  const sub = document.getElementById('pricingSub').value.trim();
+  const desc = document.getElementById('pricingDesc').value.trim();
+  const featuresRaw = document.getElementById('pricingFeatures').value;
+  const features = featuresRaw.split(',').map((x) => x.trim()).filter(Boolean);
+  const featured = document.getElementById('pricingFeatured').value === 'true';
+  const cta = document.getElementById('pricingCta').value.trim() || 'Chọn Gói Tư Vấn';
+
+  const payload = {
+    title,
+    tag,
+    price,
+    sub,
+    desc,
+    features: features.length ? features : ['Tư vấn chuyên sâu', 'Hỗ trợ kỹ thuật 24/7'],
+    featured,
+    cta
+  };
+
+  const btn = document.getElementById('btnSavePricing');
+  if (btn) btn.disabled = true;
+
+  try {
+    let res;
+    if (editId) {
+      res = await fetch(`/api/admin/pricing/${editId}`, {
+        method: 'PUT',
+        headers: authHeaders(),
+        body: JSON.stringify(payload)
+      });
+    } else {
+      payload.id = 'price-' + Date.now();
+      res = await fetch('/api/admin/pricing', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify(payload)
+      });
+    }
+
+    if (res.ok) {
+      closeModals();
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Không thể lưu gói bảng giá');
+    }
+  } catch (err) {
+    alert('Lỗi kết nối máy chủ!');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+});
+
+async function deletePricing(id) {
+  if (!confirm('Bạn có chắc chắn muốn xóa gói bảng giá này khỏi trang chủ?')) return;
+  try {
+    const res = await fetch(`/api/admin/pricing/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders()
+    });
+    if (res.ok) {
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Không thể xóa gói bảng giá');
+    }
+  } catch (err) {
+    alert('Lỗi kết nối máy chủ!');
+  }
+}
+
+// ---------------- 13. BLOG MANAGEMENT (content.blog) ----------------
+
+function renderAdminBlog() {
+  const tbody = document.getElementById('adminBlogTableBody');
+  if (!tbody || !currentContent) return;
+
+  const blog = currentContent.blog || [];
+  const canManage = hasPermission('content.blog');
+
+  if (blog.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center" style="padding:20px;color:#64748b;">Chưa có bài viết nào. Nhấn "Viết bài mới" để đăng bài đầu tiên.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = blog.map((b) => `
+    <tr>
+      <td style="width:70px;">
+        <img src="${escapeHtml(b.image || 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=100&q=80')}" alt="${escapeHtml(b.title)}" style="width:56px;height:40px;object-fit:cover;border-radius:6px;">
+      </td>
+      <td>
+        <strong style="color:#0f172a;display:block;margin-bottom:2px;">${escapeHtml(b.title)}</strong>
+        <small style="color:#64748b;font-size:12px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;">${escapeHtml(b.summary || '')}</small>
+      </td>
+      <td>
+        <span style="background:#eff6ff;color:#2563eb;padding:3px 8px;border-radius:6px;font-size:12px;font-weight:600;">
+          ${escapeHtml(b.category || 'Công Nghệ')}
+        </span>
+      </td>
+      <td>${escapeHtml(b.author || 'TechPA')}</td>
+      <td style="font-size:13px;color:#64748b;">${escapeHtml(b.date || '')}</td>
+      <td style="white-space:nowrap;">
+        ${canManage ? `
+          <button class="btn btn-outline btn-sm" onclick="openEditBlog('${b.id}')">Sửa</button>
+          <button class="btn btn-outline btn-sm" onclick="deleteBlog('${b.id}')" style="color:#ef4444;border-color:#fca5a5;">Xóa</button>
+        ` : ''}
+      </td>
+    </tr>
+  `).join('');
+}
+
+function openNewBlog() {
+  const form = document.getElementById('adminBlogForm');
+  if (form) form.reset();
+  const editId = document.getElementById('blogEditId');
+  if (editId) editId.value = '';
+  const title = document.getElementById('modalBlogAdminTitle');
+  if (title) title.textContent = 'Viết Bài Tin Tức Mới';
+  const author = document.getElementById('blogAuthorInput');
+  if (author) author.value = 'Chuyên gia TechPA';
+  const modal = document.getElementById('adminBlogModal');
+  if (modal) modal.hidden = false;
+}
+
+function openEditBlog(id) {
+  const blog = (currentContent && currentContent.blog) || [];
+  const post = blog.find((b) => b.id === id);
+  if (!post) return;
+
+  const form = document.getElementById('adminBlogForm');
+  if (form) form.reset();
+  document.getElementById('blogEditId').value = post.id;
+  document.getElementById('modalBlogAdminTitle').textContent = `Chỉnh Sửa: ${post.title}`;
+  document.getElementById('blogTitleInput').value = post.title || '';
+  document.getElementById('blogCatInput').value = post.category || '';
+  document.getElementById('blogAuthorInput').value = post.author || '';
+  document.getElementById('blogImageInput').value = post.image || '';
+  document.getElementById('blogSummaryInput').value = post.summary || '';
+  document.getElementById('blogContentInput').value = post.content || '';
+
+  document.getElementById('adminBlogModal').hidden = false;
+}
+
+document.getElementById('btnOpenNewBlog')?.addEventListener('click', openNewBlog);
+
+document.getElementById('adminBlogForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!hasPermission('content.blog')) return;
+
+  const editId = document.getElementById('blogEditId').value;
+  const title = document.getElementById('blogTitleInput').value.trim();
+  const category = document.getElementById('blogCatInput').value.trim();
+  const author = document.getElementById('blogAuthorInput').value.trim() || 'TechPA Expert';
+  const image = document.getElementById('blogImageInput').value.trim();
+  const summary = document.getElementById('blogSummaryInput').value.trim();
+  const content = document.getElementById('blogContentInput').value.trim();
+
+  const payload = {
+    title,
+    category,
+    author,
+    image,
+    summary,
+    content,
+    readTime: '5 phút'
+  };
+
+  const btn = document.getElementById('btnSaveBlog');
+  if (btn) btn.disabled = true;
+
+  try {
+    let res;
+    if (editId) {
+      res = await fetch(`/api/admin/blog/${editId}`, {
+        method: 'PUT',
+        headers: authHeaders(),
+        body: JSON.stringify(payload)
+      });
+    } else {
+      payload.id = 'post-' + Date.now();
+      payload.date = new Date().toLocaleDateString('vi-VN');
+      res = await fetch('/api/admin/blog', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify(payload)
+      });
+    }
+
+    if (res.ok) {
+      closeModals();
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Không thể lưu bài viết');
+    }
+  } catch (err) {
+    alert('Lỗi kết nối máy chủ!');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+});
+
+async function deleteBlog(id) {
+  if (!confirm('Bạn có chắc chắn muốn xóa bài viết này khỏi chuyên mục tin tức?')) return;
+  try {
+    const res = await fetch(`/api/admin/blog/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders()
+    });
+    if (res.ok) {
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Không thể xóa bài viết');
+    }
+  } catch (err) {
+    alert('Lỗi kết nối máy chủ!');
+  }
+}
+
+// ---------------- 14. MODAL HELPERS ----------------
 
 function closeModals() {
   const serviceModal = document.getElementById('serviceModal');
   const projectModal = document.getElementById('projectModal');
   const userModal = document.getElementById('userModal');
+  const pricingModal = document.getElementById('pricingModal');
+  const blogModal = document.getElementById('adminBlogModal');
 
   if (serviceModal) serviceModal.hidden = true;
   if (projectModal) projectModal.hidden = true;
   if (userModal) userModal.hidden = true;
+  if (pricingModal) pricingModal.hidden = true;
+  if (blogModal) blogModal.hidden = true;
 }
 
 // Global modal escape key

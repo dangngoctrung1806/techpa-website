@@ -1,0 +1,53 @@
+[
+  {
+    "id": "usr-admin-1",
+    "username": "admin",
+    "fullName": "Quản Trị Viên Hệ Thống",
+    "email": "admin@techpa.vn",
+    "passwordHash": "scrypt$d48be553d30a5da0d1371c5d65ee13cd$231775f97717ed376622647579465cb9fa1aac615c37cb993d5c37ea957c6b325c1b0039d4b0e5287ad74144d3c7764eabfa5d9ef48eaf1788c169ed9bb6b75b",
+    "role": "superadmin",
+    "permissions": [
+      "leads.view",
+      "leads.manage",
+      "content.menu",
+      "content.services",
+      "content.projects",
+      "content.socials",
+      "content.settings",
+      "users.manage"
+    ],
+    "active": true,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "usr-sales-2",
+    "username": "sales",
+    "fullName": "Chuyên Viên Kinh Doanh",
+    "email": "sales@techpa.vn",
+    "passwordHash": "scrypt$d48be553d30a5da0d1371c5d65ee13cd$231775f97717ed376622647579465cb9fa1aac615c37cb993d5c37ea957c6b325c1b0039d4b0e5287ad74144d3c7764eabfa5d9ef48eaf1788c169ed9bb6b75b",
+    "role": "sales",
+    "permissions": [
+      "leads.view",
+      "leads.manage"
+    ],
+    "active": true,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "usr-editor-3",
+    "username": "editor",
+    "fullName": "Biên Tập Viên Nội Dung",
+    "email": "editor@techpa.vn",
+    "passwordHash": "scrypt$d48be553d30a5da0d1371c5d65ee13cd$231775f97717ed376622647579465cb9fa1aac615c37cb993d5c37ea957c6b325c1b0039d4b0e5287ad74144d3c7764eabfa5d9ef48eaf1788c169ed9bb6b75b",
+    "role": "editor",
+    "permissions": [
+      "content.menu",
+      "content.services",
+      "content.projects",
+      "content.socials",
+      "content.settings"
+    ],
+    "active": true,
+    "createdAt": "2026-01-01T00:00:00.000Z"
+  }
+]

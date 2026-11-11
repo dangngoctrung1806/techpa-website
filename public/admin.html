@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TechPA Admin Portal | Trang Quản Trị Hệ Thống</title>
+  <title>TechPA Admin Portal | Quản Trị Hệ Thống & Phân Quyền</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
       <img src="/logo.png" alt="TechPA Logo" class="logo-img">
       <div class="logo-text">
         <strong>Tech<span>PA</span></strong>
-        <small>Portal Quản Trị CMS</small>
+        <small>Portal Quản Trị Doanh Nghiệp</small>
       </div>
     </div>
 
@@ -29,33 +29,39 @@
         <span>Dashboard Thống kê</span>
       </a>
 
-      <div class="nav-group-title">QUẢN LÝ KHÁCH HÀNG & LEADS</div>
-      <a href="#leads" class="side-link" data-tab="leads">
+      <div class="nav-group-title" data-perm-group="leads">KHÁCH HÀNG & LEADS</div>
+      <a href="#leads" class="side-link" data-tab="leads" data-perm="leads.view">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
         <span>Yêu cầu Tư vấn (Leads)</span>
         <span class="badge" id="leadsBadge">0</span>
       </a>
 
-      <div class="nav-group-title">QUẢN TRỊ NỘI DUNG (CMS)</div>
-      <a href="#menu" class="side-link" data-tab="menu">
+      <div class="nav-group-title" data-perm-group="content">NỘI DUNG WEBSITE (CMS)</div>
+      <a href="#menu" class="side-link" data-tab="menu" data-perm="content.menu">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         <span>Menu & Nhãn Hot</span>
       </a>
-      <a href="#services" class="side-link" data-tab="services">
+      <a href="#services" class="side-link" data-tab="services" data-perm="content.services">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 16 4-4-4-4"></path><path d="m6 8-4 4 4 4"></path><path d="m14.5 4-5 16"></path></svg>
         <span>Gói Dịch Vụ Công Nghệ</span>
       </a>
-      <a href="#projects" class="side-link" data-tab="projects">
+      <a href="#projects" class="side-link" data-tab="projects" data-perm="content.projects">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg>
         <span>Dự Án Tiêu Biểu</span>
       </a>
-      <a href="#socials" class="side-link" data-tab="socials">
+      <a href="#socials" class="side-link" data-tab="socials" data-perm="content.socials">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
         <span>Kênh Mạng Xã Hội</span>
       </a>
-      <a href="#settings" class="side-link" data-tab="settings">
+      <a href="#settings" class="side-link" data-tab="settings" data-perm="content.settings">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         <span>Cấu Hình Hotline & Brand</span>
+      </a>
+
+      <div class="nav-group-title" data-perm-group="system">HỆ THỐNG & TÀI KHOẢN</div>
+      <a href="#users" class="side-link" data-tab="users" data-perm="users.manage">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        <span>Quản Lý User & Phân Quyền</span>
       </a>
     </nav>
 
@@ -74,10 +80,14 @@
         <h2 id="pageTitle">Dashboard Thống Kê</h2>
         <span class="sub" id="pageSub">Hệ thống quản lý nội dung & khách hàng tiềm năng TechPA</span>
       </div>
-      <div class="topbar-user">
-        <div class="user-badge">
+      <div class="topbar-user" style="display:flex;align-items:center;gap:12px;">
+        <div id="storageStatusBadge" class="storage-pill">
+          <span>💾 Local</span>
+        </div>
+        <div class="user-badge" style="display:flex;align-items:center;gap:8px;">
           <span class="status-online"></span>
-          Administrator (Đã xác thực)
+          <span id="topbarUsername">Admin</span>
+          <span id="topbarRole" class="role-pill superadmin">SUPERADMIN</span>
         </div>
       </div>
     </header>
@@ -98,14 +108,14 @@
             <div class="stat-icon green">⚡</div>
             <div>
               <span class="stat-label">Dịch vụ đang kích hoạt</span>
-              <strong class="stat-val" id="dashTotalServices">6</strong>
+              <strong class="stat-val" id="dashTotalServices">0</strong>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon blue">💼</div>
             <div>
               <span class="stat-label">Dự án đã công bố</span>
-              <strong class="stat-val" id="dashTotalProjects">4</strong>
+              <strong class="stat-val" id="dashTotalProjects">0</strong>
             </div>
           </div>
           <div class="stat-card">
@@ -117,7 +127,7 @@
           </div>
         </div>
 
-        <div class="card recent-leads-card">
+        <div class="card recent-leads-card" id="dashLeadsCard">
           <div class="card-header">
             <h3>Yêu Cầu Tư Vấn Mới Nhất</h3>
             <button class="btn btn-outline btn-sm" onclick="switchTab('leads')">Xem tất cả leads →</button>
@@ -311,8 +321,108 @@
         </div>
       </section>
 
+      <!-- TAB USERS: QUẢN LÝ NGƯỜI DÙNG & PHÂN QUYỀN -->
+      <section id="tab-users" class="tab-pane">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Quản Lý Tài Khoản Người Dùng & Phân Quyền</h3>
+              <p class="card-sub">Quản lý danh sách thành viên, cấp vai trò và phân quyền chi tiết theo từng chức năng module</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btnOpenNewUser">Thêm người dùng mới +</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Tài Khoản</th>
+                  <th>Họ Và Tên</th>
+                  <th>Email</th>
+                  <th>Vai Trò (Role)</th>
+                  <th>Quyền Hạn Chi Tiết</th>
+                  <th>Trạng Thái</th>
+                  <th>Hành Động</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <tr><td colspan="7" class="text-center">Đang tải danh sách người dùng...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
     </div>
   </main>
+
+  <!-- Modal Add/Edit User -->
+  <div class="modal" id="userModal" hidden>
+    <div class="modal-card" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3 id="userModalTitle">Thêm Người Dùng Mới</h3>
+        <button class="close-btn" onclick="closeModals()">✕</button>
+      </div>
+      <form id="userForm">
+        <input type="hidden" id="userEditId">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tên đăng nhập *</label>
+            <input type="text" id="userUsername" required placeholder="VD: sales_hung">
+            <small style="color:#64748b;font-size:11px;">Chữ cái thường, số, tối thiểu 3 ký tự</small>
+          </div>
+          <div class="form-group">
+            <label>Họ và tên *</label>
+            <input type="text" id="userFullName" required placeholder="VD: Nguyễn Văn Hùng">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email liên hệ</label>
+            <input type="email" id="userEmail" placeholder="hung.nguyen@techpa.vn">
+          </div>
+          <div class="form-group">
+            <label id="userPasswordLabel">Mật khẩu *</label>
+            <input type="password" id="userPassword" placeholder="Tối thiểu 6 ký tự">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Vai trò hệ thống *</label>
+            <select id="userRole" class="form-select" style="width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;font-family:inherit;">
+              <option value="superadmin">Quản trị viên cấp cao (Toàn quyền)</option>
+              <option value="sales">Nhân viên kinh doanh (Quản lý Leads)</option>
+              <option value="editor">Biên tập nội dung (Quản trị CMS)</option>
+              <option value="viewer">Chỉ xem Leads</option>
+              <option value="custom">Tùy chỉnh phân quyền chi tiết</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Trạng thái tài khoản</label>
+            <select id="userActive" class="form-select" style="width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;font-family:inherit;">
+              <option value="true">Đang kích hoạt (Hoạt động)</option>
+              <option value="false">Tạm khóa tài khoản</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Phân quyền chi tiết theo module -->
+        <div class="form-group" style="margin-top:10px;">
+          <label style="display:flex;justify-content:space-between;align-items:center;">
+            <span>Phân quyền chi tiết theo từng chức năng module</span>
+            <small id="permHelpText" style="color:#b45309;font-weight:600;">Tự động theo vai trò</small>
+          </label>
+          <div id="permissionsCheckboxesGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;padding:12px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;max-height:220px;overflow-y:auto;">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <div class="modal-footer" style="margin-top:18px;">
+          <button type="button" class="btn btn-outline" onclick="closeModals()">Hủy</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveUser">Lưu Tài Khoản</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- Modal Add/Edit Service -->
   <div class="modal" id="serviceModal" hidden>

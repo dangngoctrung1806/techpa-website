@@ -1,41 +1,158 @@
-// TechPA Admin Portal Script - Hoàn Chỉnh Toàn Diện (Có Auth Guard & Socials Config)
+// TechPA Admin Portal - Quản Trị Hệ Thống & Phân Quyền Đa Cấp (RBAC)
 
-// 1. AUTH GUARD: Kiểm tra token trước khi tải trang
-const adminToken = localStorage.getItem('techpa_admin_token');
-if (!adminToken) {
-  window.location.href = '/login.html';
+let currentUser = null;
+let currentData = null; // { vi: {...}, en: {...} }
+let currentContent = null; // currentData.vi
+let currentLeads = [];
+let currentUsers = [];
+let availablePermissions = [];
+let availableRoles = [];
+
+function getToken() {
+  return localStorage.getItem('techpa_admin_token') || '';
 }
 
 function authHeaders() {
   return {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + (localStorage.getItem('techpa_admin_token') || '')
+    'Authorization': 'Bearer ' + getToken()
   };
 }
 
-// Logout Handler
-document.getElementById('btnLogout')?.addEventListener('click', () => {
-  localStorage.removeItem('techpa_admin_token');
-  window.location.href = '/login.html';
-});
+function escapeHtml(str) {
+  return String(str || '').replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[c]));
+}
 
-let currentData = null;
-let currentLeads = [];
+// ---------------- 1. AUTH GUARD & INITIALIZATION ----------------
+
+async function checkAuthAndInit() {
+  const token = getToken();
+  if (!token) {
+    window.location.href = '/login.html';
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/admin/me', { headers: authHeaders() });
+    if (!res.ok) {
+      localStorage.removeItem('techpa_admin_token');
+      window.location.href = '/login.html';
+      return;
+    }
+
+    const data = await res.json();
+    currentUser = data.user;
+    updateTopbar(currentUser, data.storage);
+    applyPermissionGuards(currentUser);
+
+    // Load static roles & permissions catalog if user can manage users
+    if (hasPermission('users.manage')) {
+      try {
+        const rpRes = await fetch('/api/admin/roles-permissions', { headers: authHeaders() });
+        if (rpRes.ok) {
+          const rpData = await rpRes.json();
+          availablePermissions = rpData.permissions || [];
+          availableRoles = rpData.roles || [];
+          renderPermissionsCheckboxes();
+        }
+      } catch (e) {
+        console.warn('Could not load roles-permissions metadata:', e);
+      }
+    }
+
+    // Load core admin data
+    await loadAdminData();
+  } catch (err) {
+    console.error('Lỗi xác thực:', err);
+    localStorage.removeItem('techpa_admin_token');
+    window.location.href = '/login.html';
+  }
+}
+
+function hasPermission(perm) {
+  if (!currentUser) return false;
+  if (currentUser.role === 'superadmin') return true;
+  return Array.isArray(currentUser.permissions) && currentUser.permissions.includes(perm);
+}
+
+function updateTopbar(user, storage) {
+  const nameEl = document.getElementById('topbarUsername');
+  const roleEl = document.getElementById('topbarRole');
+  const storageEl = document.getElementById('storageStatusBadge');
+
+  if (nameEl) nameEl.textContent = user.fullName || user.username;
+  if (roleEl) {
+    roleEl.textContent = (user.role || 'user').toUpperCase();
+    roleEl.className = `role-pill ${user.role || 'viewer'}`;
+  }
+
+  if (storageEl && storage) {
+    if (storage.mode === 'redis') {
+      storageEl.innerHTML = '<span>☁️ Upstash Redis (Lưu vĩnh viễn)</span>';
+      storageEl.className = 'storage-pill redis';
+    } else if (storage.mode === 'memory') {
+      storageEl.innerHTML = '<span title="Đang lưu trong bộ nhớ tạm trên Vercel. Hãy liên kết Upstash để lưu vĩnh viễn">⚠️ Bộ nhớ tạm</span>';
+      storageEl.className = 'storage-pill memory';
+    } else {
+      storageEl.innerHTML = '<span>💾 Local Storage (File)</span>';
+      storageEl.className = 'storage-pill';
+    }
+  }
+}
+
+// Ẩn các menu và tính năng mà user không có quyền truy cập
+function applyPermissionGuards(user) {
+  const perms = user.permissions || [];
+  const isSuper = user.role === 'superadmin';
+
+  document.querySelectorAll('[data-perm]').forEach((el) => {
+    const required = el.dataset.perm;
+    if (isSuper || perms.includes(required)) {
+      el.style.display = '';
+    } else {
+      el.style.display = 'none';
+    }
+  });
+
+  // Ẩn các tiêu đề nhóm nếu tất cả mục con bị ẩn
+  document.querySelectorAll('.nav-group-title[data-perm-group]').forEach((title) => {
+    const group = title.dataset.permGroup;
+    let hasVisible = false;
+    if (group === 'leads' && (isSuper || perms.includes('leads.view'))) hasVisible = true;
+    if (group === 'content' && (isSuper || perms.some((p) => p.startsWith('content.')))) hasVisible = true;
+    if (group === 'system' && (isSuper || perms.includes('users.manage'))) hasVisible = true;
+    title.style.display = hasVisible ? '' : 'none';
+  });
+
+  // Nếu user không có quyền xem leads, ẩn thẻ leads trên dashboard
+  const dashLeadsCard = document.getElementById('dashLeadsCard');
+  if (dashLeadsCard) {
+    dashLeadsCard.style.display = isSuper || perms.includes('leads.view') ? '' : 'none';
+  }
+}
+
+// ---------------- 2. TAB NAVIGATION ----------------
 
 const TAB_TITLES = {
-  overview: { title: 'Dashboard Thống Kê', sub: 'Hệ thống quản trị nội dung & khách hàng tiềm năng TechPA' },
+  overview: { title: 'Dashboard Thống Kê', sub: 'Hệ thống quản lý nội dung & khách hàng tiềm năng TechPA' },
   leads: { title: 'Quản Lý Yêu Cầu Tư Vấn (Leads)', sub: 'Danh sách khách hàng tiềm năng gửi từ website' },
   menu: { title: 'Cấu Hình Menu & Nhãn Nổi Bật', sub: 'Tùy chỉnh tên menu và nhãn Hot / New / Pro' },
   services: { title: 'Quản Trị Dịch Vụ Công Nghệ', sub: 'Thêm, sửa, xóa các gói giải pháp số' },
   projects: { title: 'Quản Trị Dự Án Tiêu Biểu', sub: 'Các câu chuyện thành công và case studies' },
   socials: { title: 'Cấu Hình Kênh Mạng Xã Hội', sub: 'Đường dẫn Zalo, Facebook, LinkedIn, YouTube' },
-  settings: { title: 'Cấu Hình Hệ Thống & Hotline', sub: 'Thông tin thương hiệu TechPA và banner ưu đãi' }
+  settings: { title: 'Cấu Hình Hệ Thống & Hotline', sub: 'Thông tin thương hiệu TechPA và banner ưu đãi' },
+  users: { title: 'Quản Lý Tài Khoản & Phân Quyền', sub: 'Quản lý thành viên, vai trò (Roles) và quyền theo module' }
 };
 
-// Switch Tab
 function switchTab(tabId) {
-  document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.side-link').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach((el) => el.classList.remove('active'));
+  document.querySelectorAll('.side-link').forEach((el) => el.classList.remove('active'));
 
   const activePane = document.getElementById(`tab-${tabId}`);
   if (activePane) activePane.classList.add('active');
@@ -44,12 +161,17 @@ function switchTab(tabId) {
   if (activeLink) activeLink.classList.add('active');
 
   const info = TAB_TITLES[tabId] || TAB_TITLES.overview;
-  document.getElementById('pageTitle').textContent = info.title;
-  document.getElementById('pageSub').textContent = info.sub;
+  const pTitle = document.getElementById('pageTitle');
+  const pSub = document.getElementById('pageSub');
+  if (pTitle) pTitle.textContent = info.title;
+  if (pSub) pSub.textContent = info.sub;
+
+  if (tabId === 'users' && hasPermission('users.manage')) {
+    loadUsers();
+  }
 }
 
-// Bind navigation clicks
-document.querySelectorAll('.side-link').forEach(link => {
+document.querySelectorAll('.side-link').forEach((link) => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
     const tab = link.dataset.tab;
@@ -57,68 +179,99 @@ document.querySelectorAll('.side-link').forEach(link => {
   });
 });
 
-// Load Content & Leads
+// Logout handler
+document.getElementById('btnLogout')?.addEventListener('click', async () => {
+  try {
+    await fetch('/api/admin/logout', { method: 'POST', headers: authHeaders() });
+  } catch (e) {}
+  localStorage.removeItem('techpa_admin_token');
+  window.location.href = '/login.html';
+});
+
+// ---------------- 3. LOAD DATA & RENDER ----------------
+
 async function loadAdminData() {
   try {
-    const [resContent, resLeads] = await Promise.all([
-      fetch('/api/content'),
-      fetch('/api/admin/leads', { headers: authHeaders() })
-    ]);
+    const promises = [fetch('/api/content')];
 
-    if (resLeads.status === 401) {
-      localStorage.removeItem('techpa_admin_token');
-      window.location.href = '/login.html';
-      return;
+    if (hasPermission('leads.view')) {
+      promises.push(fetch('/api/admin/leads', { headers: authHeaders() }));
     }
 
-    currentData = await resContent.json();
-    currentLeads = await resLeads.json();
+    const results = await Promise.all(promises);
+    const contentRes = results[0];
+    const leadsRes = results[1];
+
+    if (contentRes.ok) {
+      currentData = await contentRes.json();
+      currentContent = currentData.vi || currentData;
+    }
+
+    if (leadsRes && leadsRes.ok) {
+      currentLeads = await leadsRes.json();
+    } else {
+      currentLeads = [];
+    }
 
     renderDashboard();
-    renderLeads();
-    renderMenuConfig();
-    renderServicesList();
-    renderProjectsList();
-    populateSocials();
-    populateSettings();
+    if (hasPermission('leads.view')) renderLeads();
+    if (hasPermission('content.menu')) renderMenuConfig();
+    if (hasPermission('content.services')) renderServicesList();
+    if (hasPermission('content.projects')) renderProjectsList();
+    if (hasPermission('content.socials')) populateSocials();
+    if (hasPermission('content.settings')) populateSettings();
   } catch (err) {
-    console.error('Error loading admin data:', err);
+    console.error('Lỗi tải dữ liệu quản trị:', err);
   }
 }
 
-// Dashboard statistics
+// ---------------- 4. DASHBOARD ----------------
+
 function renderDashboard() {
-  const totalLeads = currentLeads.length;
-  document.getElementById('dashTotalLeads').textContent = totalLeads;
-  document.getElementById('leadsBadge').textContent = totalLeads;
-  document.getElementById('dashTotalServices').textContent = currentData.services?.length || 0;
-  document.getElementById('dashTotalProjects').textContent = currentData.projects?.length || 0;
+  if (!currentContent) return;
 
-  // Recent leads table (5 newest)
-  const recentLeadsTable = document.getElementById('recentLeadsTable');
-  if (currentLeads.length === 0) {
-    recentLeadsTable.innerHTML = '<tr><td colspan="6" class="text-center">Chưa có yêu cầu tư vấn nào. Hãy gửi thử form tại trang chủ!</td></tr>';
-  } else {
-    recentLeadsTable.innerHTML = currentLeads.slice(0, 5).map(l => `
-      <tr>
-        <td><span class="code-badge">${l.code || 'TPA-NEW'}</span></td>
-        <td><strong>${escapeHtml(l.name)}</strong></td>
-        <td>${escapeHtml(l.phone)}<br><small style="color:#64748b">${escapeHtml(l.email)}</small></td>
-        <td><span style="color:#b45309;font-weight:700">${escapeHtml(l.service)}</span></td>
-        <td>${new Date(l.date).toLocaleString('vi-VN')}</td>
-        <td><span class="status-pill ${l.status === 'Đã liên hệ' ? 'done' : 'new'}">${l.status || 'Chờ xử lý'}</span></td>
-      </tr>
-    `).join('');
+  const totalLeads = currentLeads.length;
+  const elTotalLeads = document.getElementById('dashTotalLeads');
+  const elLeadsBadge = document.getElementById('leadsBadge');
+  const elServices = document.getElementById('dashTotalServices');
+  const elProjects = document.getElementById('dashTotalProjects');
+
+  if (elTotalLeads) elTotalLeads.textContent = totalLeads;
+  if (elLeadsBadge) elLeadsBadge.textContent = totalLeads;
+  if (elServices) elServices.textContent = currentContent.services?.length || 0;
+  if (elProjects) elProjects.textContent = currentContent.projects?.length || 0;
+
+  const recentTable = document.getElementById('recentLeadsTable');
+  if (recentTable) {
+    if (currentLeads.length === 0) {
+      recentTable.innerHTML = '<tr><td colspan="6" class="text-center">Chưa có yêu cầu tư vấn nào được ghi nhận.</td></tr>';
+    } else {
+      recentTable.innerHTML = currentLeads.slice(0, 5).map((l) => `
+        <tr>
+          <td><span class="code-badge">${l.code || 'TPA-NEW'}</span></td>
+          <td><strong>${escapeHtml(l.name)}</strong></td>
+          <td>${escapeHtml(l.phone)}<br><small style="color:#64748b">${escapeHtml(l.email)}</small></td>
+          <td><span style="color:#b45309;font-weight:700">${escapeHtml(l.service)}</span></td>
+          <td>${new Date(l.date).toLocaleString('vi-VN')}</td>
+          <td><span class="status-pill ${l.status === 'Đã liên hệ' ? 'done' : 'new'}">${escapeHtml(l.status || 'Chờ xử lý')}</span></td>
+        </tr>
+      `).join('');
+    }
   }
 }
 
-// Render full leads list
+// ---------------- 5. LEADS MANAGEMENT ----------------
+
 function renderLeads() {
   const table = document.getElementById('allLeadsTable');
+  if (!table) return;
+
   if (currentLeads.length === 0) {
     table.innerHTML = '<tr><td colspan="8" class="text-center">Chưa có yêu cầu tư vấn nào được ghi nhận.</td></tr>';
     return;
   }
+
+  const canManage = hasPermission('leads.manage');
 
   table.innerHTML = currentLeads.map((l) => `
     <tr>
@@ -130,15 +283,19 @@ function renderLeads() {
       <td>${escapeHtml(l.message || 'Không có')}</td>
       <td>${new Date(l.date).toLocaleString('vi-VN')}</td>
       <td>
-        <button class="btn btn-outline btn-sm" onclick="toggleLeadStatus('${l.code}')">
-          ${l.status === 'Đã liên hệ' ? 'Đổi: Chờ xử lý' : 'Đổi: Đã liên hệ'}
-        </button>
+        ${canManage ? `
+          <button class="btn btn-outline btn-sm" onclick="toggleLeadStatus('${l.code}')" style="margin-right:6px;">
+            ${l.status === 'Đã liên hệ' ? 'Đổi: Chờ xử lý' : 'Đổi: Đã liên hệ'}
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="deleteLead('${l.code}')" style="color:#ef4444;border-color:#fca5a5;">
+            Xóa
+          </button>
+        ` : `<span style="color:#64748b;font-size:12px;">Chỉ xem</span>`}
       </td>
     </tr>
   `).join('');
 }
 
-// Toggle lead status
 async function toggleLeadStatus(code) {
   try {
     const res = await fetch(`/api/admin/leads/${code}/status`, {
@@ -146,19 +303,277 @@ async function toggleLeadStatus(code) {
       headers: authHeaders()
     });
     if (res.ok) {
-      loadAdminData();
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Không thể đổi trạng thái lead');
     }
   } catch (err) {
-    alert('Không thể đổi trạng thái lead');
+    alert('Lỗi kết nối máy chủ');
   }
 }
 
-// Render Menu Configuration (Nhãn Hot / New)
+async function deleteLead(code) {
+  if (!confirm(`Bạn có chắc chắn muốn xóa yêu cầu tư vấn ${code}?`)) return;
+  try {
+    const res = await fetch(`/api/admin/leads/${code}`, {
+      method: 'DELETE',
+      headers: authHeaders()
+    });
+    if (res.ok) {
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Không thể xóa lead');
+    }
+  } catch (err) {
+    alert('Lỗi kết nối máy chủ');
+  }
+}
+
+document.getElementById('btnRefreshLeads')?.addEventListener('click', loadAdminData);
+
+// ---------------- 6. USER MANAGEMENT & RBAC ----------------
+
+async function loadUsers() {
+  if (!hasPermission('users.manage')) return;
+  const tbody = document.getElementById('usersTableBody');
+  if (tbody) tbody.innerHTML = '<tr><td colspan="7" class="text-center">Đang tải danh sách người dùng...</td></tr>';
+
+  try {
+    const res = await fetch('/api/admin/users', { headers: authHeaders() });
+    if (res.ok) {
+      currentUsers = await res.json();
+      renderUsers();
+    } else {
+      const err = await res.json();
+      if (tbody) tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="color:#ef4444">${escapeHtml(err.error || 'Lỗi tải danh sách người dùng')}</td></tr>`;
+    }
+  } catch (err) {
+    if (tbody) tbody.innerHTML = '<tr><td colspan="7" class="text-center" style="color:#ef4444">Lỗi kết nối máy chủ</td></tr>';
+  }
+}
+
+function renderUsers() {
+  const tbody = document.getElementById('usersTableBody');
+  if (!tbody) return;
+
+  if (currentUsers.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="text-center">Chưa có người dùng nào.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = currentUsers.map((u) => {
+    const isSelf = currentUser && currentUser.id === u.id;
+    const isSuper = u.role === 'superadmin';
+
+    let permSummary = '';
+    if (isSuper) {
+      permSummary = '<span class="perm-pill" style="background:#fef3c7;color:#b45309;font-weight:700">Toàn quyền hệ thống</span>';
+    } else if (!u.permissions || u.permissions.length === 0) {
+      permSummary = '<span style="color:#94a3b8;font-size:12px;">Chưa cấp quyền</span>';
+    } else {
+      permSummary = u.permissions.map((p) => `<span class="perm-pill">${escapeHtml(p)}</span>`).join('');
+    }
+
+    return `
+      <tr>
+        <td>
+          <strong style="color:#0f172a">${escapeHtml(u.username)}</strong>
+          ${isSelf ? '<small style="display:block;color:#f59e0b;font-weight:700">(Tài khoản của bạn)</small>' : ''}
+        </td>
+        <td>${escapeHtml(u.fullName)}</td>
+        <td>${escapeHtml(u.email || '—')}</td>
+        <td>
+          <span class="role-pill ${u.role}">${escapeHtml(u.role)}</span>
+        </td>
+        <td style="max-width:320px;">${permSummary}</td>
+        <td>
+          <span class="status-pill ${u.active ? 'done' : 'new'}">
+            ${u.active ? 'Hoạt động' : 'Tạm khóa'}
+          </span>
+        </td>
+        <td>
+          <button class="btn btn-outline btn-sm" onclick="openEditUser('${u.id}')" style="margin-right:6px;">
+            Sửa
+          </button>
+          ${!isSelf ? `
+            <button class="btn btn-outline btn-sm" onclick="deleteUser('${u.id}', '${escapeHtml(u.username)}')" style="color:#ef4444;border-color:#fca5a5;">
+              Xóa
+            </button>
+          ` : ''}
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function renderPermissionsCheckboxes() {
+  const container = document.getElementById('permissionsCheckboxesGrid');
+  if (!container || availablePermissions.length === 0) return;
+
+  container.innerHTML = availablePermissions.map((p) => `
+    <label class="perm-checkbox-item">
+      <input type="checkbox" name="permissions" value="${p.key}" class="perm-chk">
+      <div>
+        <strong>${escapeHtml(p.label)}</strong>
+        <small style="display:block;color:#64748b;font-size:11px;">${escapeHtml(p.group)} [${p.key}]</small>
+      </div>
+    </label>
+  `).join('');
+}
+
+// Cập nhật checkbox theo vai trò được chọn
+function syncRolePermissions(selectedRole, existingPerms = null) {
+  const roleDef = availableRoles.find((r) => r.key === selectedRole);
+  const helpText = document.getElementById('permHelpText');
+  const chks = document.querySelectorAll('.perm-chk');
+
+  if (selectedRole === 'custom') {
+    if (helpText) helpText.textContent = 'Tùy chọn tích chọn các quyền cho tài khoản này';
+    chks.forEach((chk) => {
+      chk.disabled = false;
+      if (existingPerms) {
+        chk.checked = existingPerms.includes(chk.value);
+      }
+    });
+  } else if (selectedRole === 'superadmin') {
+    if (helpText) helpText.textContent = 'Quản trị viên cấp cao có toàn bộ quyền hệ thống';
+    chks.forEach((chk) => {
+      chk.checked = true;
+      chk.disabled = true;
+    });
+  } else if (roleDef) {
+    if (helpText) helpText.textContent = `Quyền mặc định của vai trò ${roleDef.label}`;
+    chks.forEach((chk) => {
+      chk.checked = roleDef.permissions.includes(chk.value);
+      chk.disabled = true;
+    });
+  }
+}
+
+document.getElementById('userRole')?.addEventListener('change', (e) => {
+  syncRolePermissions(e.target.value);
+});
+
+// Modal Add/Edit User
+function openNewUser() {
+  document.getElementById('userForm').reset();
+  document.getElementById('userEditId').value = '';
+  document.getElementById('userModalTitle').textContent = 'Thêm Người Dùng Mới';
+  document.getElementById('userUsername').disabled = false;
+  document.getElementById('userPassword').required = true;
+  document.getElementById('userPasswordLabel').textContent = 'Mật khẩu *';
+  document.getElementById('userRole').value = 'sales';
+  document.getElementById('userActive').value = 'true';
+  syncRolePermissions('sales');
+  document.getElementById('userModal').hidden = false;
+}
+
+function openEditUser(userId) {
+  const user = currentUsers.find((u) => u.id === userId);
+  if (!user) return;
+
+  document.getElementById('userForm').reset();
+  document.getElementById('userEditId').value = user.id;
+  document.getElementById('userModalTitle').textContent = `Chỉnh Sửa: ${user.username}`;
+  document.getElementById('userUsername').value = user.username;
+  document.getElementById('userUsername').disabled = true;
+  document.getElementById('userFullName').value = user.fullName || '';
+  document.getElementById('userEmail').value = user.email || '';
+  document.getElementById('userPassword').required = false;
+  document.getElementById('userPassword').value = '';
+  document.getElementById('userPasswordLabel').textContent = 'Mật khẩu (để trống nếu không đổi)';
+  document.getElementById('userRole').value = user.role || 'custom';
+  document.getElementById('userActive').value = user.active ? 'true' : 'false';
+
+  syncRolePermissions(user.role || 'custom', user.permissions || []);
+  document.getElementById('userModal').hidden = false;
+}
+
+document.getElementById('btnOpenNewUser')?.addEventListener('click', openNewUser);
+
+document.getElementById('userForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const editId = document.getElementById('userEditId').value;
+  const username = document.getElementById('userUsername').value.trim();
+  const fullName = document.getElementById('userFullName').value.trim();
+  const email = document.getElementById('userEmail').value.trim();
+  const password = document.getElementById('userPassword').value;
+  const role = document.getElementById('userRole').value;
+  const active = document.getElementById('userActive').value === 'true';
+
+  let permissions = [];
+  if (role === 'custom') {
+    document.querySelectorAll('.perm-chk:checked').forEach((chk) => permissions.push(chk.value));
+  }
+
+  const btn = document.getElementById('btnSaveUser');
+  btn.disabled = true;
+  btn.textContent = 'Đang lưu...';
+
+  try {
+    let res;
+    if (editId) {
+      // PUT update
+      const payload = { fullName, email, role, active };
+      if (password) payload.password = password;
+      if (role === 'custom') payload.permissions = permissions;
+
+      res = await fetch(`/api/admin/users/${editId}`, {
+        method: 'PUT',
+        headers: authHeaders(),
+        body: JSON.stringify(payload)
+      });
+    } else {
+      // POST create
+      res = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ username, fullName, email, password, role, permissions, active })
+      });
+    }
+
+    const data = await res.json();
+    if (res.ok) {
+      closeModals();
+      await loadUsers();
+    } else {
+      alert(data.error || 'Lỗi thao tác tài khoản');
+    }
+  } catch (err) {
+    alert('Lỗi kết nối máy chủ');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Lưu Tài Khoản';
+  }
+});
+
+async function deleteUser(id, username) {
+  if (!confirm(`Bạn có chắc chắn muốn xóa tài khoản "${username}"?`)) return;
+  try {
+    const res = await fetch(`/api/admin/users/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders()
+    });
+    if (res.ok) {
+      await loadUsers();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Không thể xóa người dùng');
+    }
+  } catch (err) {
+    alert('Lỗi kết nối máy chủ');
+  }
+}
+
+// ---------------- 7. MENU & BADGES CONFIG (content.menu) ----------------
+
 function renderMenuConfig() {
   const table = document.getElementById('menuConfigTable');
-  if (!table || !currentData.nav) return;
+  if (!table || !currentContent || !currentContent.nav) return;
 
-  table.innerHTML = currentData.nav.map((item, index) => `
+  table.innerHTML = currentContent.nav.map((item, index) => `
     <tr data-menu-index="${index}">
       <td>
         <input type="text" class="menu-label-input" value="${escapeHtml(item.label)}" style="width:100%;padding:6px 10px;border:1px solid #cbd5e1;border-radius:6px;">
@@ -186,8 +601,8 @@ function renderMenuConfig() {
   `).join('');
 }
 
-// Save Menu Configuration
 document.getElementById('btnSaveMenu')?.addEventListener('click', async () => {
+  if (!hasPermission('content.menu')) return;
   const rows = document.querySelectorAll('#menuConfigTable tr');
   const updatedNav = [];
   const indicator = document.getElementById('menuSaveIndicator');
@@ -196,7 +611,7 @@ document.getElementById('btnSaveMenu')?.addEventListener('click', async () => {
     const label = row.querySelector('.menu-label-input').value.trim();
     const badge = row.querySelector('.menu-badge-input').value.trim();
     const badgeColor = row.querySelector('.menu-color-select').value;
-    const orig = currentData.nav[i] || {};
+    const orig = currentContent.nav[i] || {};
 
     updatedNav.push({
       ...orig,
@@ -206,7 +621,7 @@ document.getElementById('btnSaveMenu')?.addEventListener('click', async () => {
     });
   });
 
-  indicator.textContent = 'Đang lưu cấu hình menu...';
+  if (indicator) indicator.textContent = 'Đang lưu cấu hình menu...';
 
   try {
     const res = await fetch('/api/admin/menu', {
@@ -215,146 +630,42 @@ document.getElementById('btnSaveMenu')?.addEventListener('click', async () => {
       body: JSON.stringify({ nav: updatedNav })
     });
     if (res.ok) {
-      indicator.textContent = '✓ Đã cập nhật menu & nhãn thành công!';
-      setTimeout(() => indicator.textContent = '', 3000);
-      loadAdminData();
+      if (indicator) {
+        indicator.textContent = '✓ Đã cập nhật menu & nhãn thành công!';
+        setTimeout(() => indicator.textContent = '', 3000);
+      }
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      if (indicator) indicator.textContent = 'Lỗi: ' + (err.error || 'Không thể lưu menu');
     }
   } catch (err) {
-    indicator.textContent = 'Lỗi lưu menu!';
+    if (indicator) indicator.textContent = 'Lỗi kết nối máy chủ!';
   }
 });
 
-// Render Services
+// ---------------- 8. SERVICES (content.services) ----------------
+
 function renderServicesList() {
   const list = document.getElementById('adminServicesList');
-  list.innerHTML = currentData.services.map(s => `
+  if (!list || !currentContent || !currentContent.services) return;
+
+  const canManage = hasPermission('content.services');
+
+  list.innerHTML = currentContent.services.map((s) => `
     <div class="service-admin-item">
       <div>
         <h4>${escapeHtml(s.title)}</h4>
         <p>${escapeHtml(s.shortDesc)}</p>
-        <small style="color:#b45309;font-weight:700">${s.features.map(f => escapeHtml(f)).join(' • ')}</small>
+        <small style="color:#b45309;font-weight:700">${(s.features || []).map((f) => escapeHtml(f)).join(' • ')}</small>
       </div>
       <div>
-        <button class="btn btn-outline btn-sm" onclick="deleteService('${s.id}')" style="color:#ef4444;border-color:#fca5a5">Xóa</button>
+        ${canManage ? `
+          <button class="btn btn-outline btn-sm" onclick="deleteService('${s.id}')" style="color:#ef4444;border-color:#fca5a5">Xóa</button>
+        ` : ''}
       </div>
     </div>
   `).join('');
-}
-
-// Render Projects
-function renderProjectsList() {
-  const list = document.getElementById('adminProjectsList');
-  list.innerHTML = currentData.projects.map(p => `
-    <div class="service-admin-item">
-      <div style="display:flex;gap:14px;align-items:center;">
-        <img src="${p.image}" style="width:70px;height:50px;object-fit:cover;border-radius:6px;border:1px solid #cbd5e1;">
-        <div>
-          <h4>${escapeHtml(p.title)}</h4>
-          <p>Khách hàng: <strong>${escapeHtml(p.client)}</strong> | Danh mục: <span style="color:#b45309;font-weight:600">${escapeHtml(p.category)}</span></p>
-        </div>
-      </div>
-      <div>
-        <button class="btn btn-outline btn-sm" onclick="deleteProject('${p.id}')" style="color:#ef4444;border-color:#fca5a5">Xóa</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-// Populate Socials
-function populateSocials() {
-  const s = currentData.socials || {};
-  document.getElementById('setZalo').value = s.zalo || '';
-  document.getElementById('setFacebook').value = s.facebook || '';
-  document.getElementById('setLinkedin').value = s.linkedin || '';
-  document.getElementById('setYoutube').value = s.youtube || '';
-}
-
-// Save Socials
-document.getElementById('socialsForm')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const indicator = document.getElementById('socialSaveIndicator');
-  const btn = document.getElementById('btnSaveSocials');
-
-  const updatedSocials = {
-    zalo: document.getElementById('setZalo').value.trim(),
-    facebook: document.getElementById('setFacebook').value.trim(),
-    linkedin: document.getElementById('setLinkedin').value.trim(),
-    youtube: document.getElementById('setYoutube').value.trim()
-  };
-
-  btn.disabled = true;
-  indicator.textContent = 'Đang lưu...';
-
-  try {
-    const res = await fetch('/api/admin/socials', {
-      method: 'POST',
-      headers: authHeaders(),
-      body: JSON.stringify({ socials: updatedSocials })
-    });
-    if (res.ok) {
-      indicator.textContent = '✓ Đã cập nhật kênh mạng xã hội thành công!';
-      setTimeout(() => indicator.textContent = '', 3000);
-      loadAdminData();
-    }
-  } catch (err) {
-    indicator.textContent = 'Lỗi lưu mạng xã hội!';
-  } finally {
-    btn.disabled = false;
-  }
-});
-
-// Settings form populate
-function populateSettings() {
-  const b = currentData.brand;
-  document.getElementById('setBrandName').value = b.name || '';
-  document.getElementById('setHotline').value = b.hotline || '';
-  document.getElementById('setEmail').value = b.email || '';
-  document.getElementById('setWorkingHours').value = b.workingHours || '';
-  document.getElementById('setAddress').value = b.address || '';
-  document.getElementById('setAnnouncement').value = b.announcement || '';
-}
-
-// Save Settings
-document.getElementById('settingsForm')?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const btn = document.getElementById('btnSaveSettings');
-  const indicator = document.getElementById('saveIndicator');
-
-  const updatedBrand = {
-    ...currentData.brand,
-    name: document.getElementById('setBrandName').value,
-    hotline: document.getElementById('setHotline').value,
-    email: document.getElementById('setEmail').value,
-    workingHours: document.getElementById('setWorkingHours').value,
-    address: document.getElementById('setAddress').value,
-    announcement: document.getElementById('setAnnouncement').value
-  };
-
-  btn.disabled = true;
-  indicator.textContent = 'Đang lưu...';
-
-  try {
-    const res = await fetch('/api/admin/settings', {
-      method: 'POST',
-      headers: authHeaders(),
-      body: JSON.stringify({ brand: updatedBrand })
-    });
-    if (res.ok) {
-      indicator.textContent = '✓ Đã cập nhật thành công!';
-      setTimeout(() => indicator.textContent = '', 3000);
-      loadAdminData();
-    }
-  } catch (err) {
-    indicator.textContent = 'Lỗi lưu cấu hình!';
-  } finally {
-    btn.disabled = false;
-  }
-});
-
-// Modal helpers
-function closeModals() {
-  document.getElementById('serviceModal').hidden = true;
-  document.getElementById('projectModal').hidden = true;
 }
 
 document.getElementById('btnOpenNewService')?.addEventListener('click', () => {
@@ -362,18 +673,14 @@ document.getElementById('btnOpenNewService')?.addEventListener('click', () => {
   document.getElementById('serviceModal').hidden = false;
 });
 
-document.getElementById('btnOpenNewProject')?.addEventListener('click', () => {
-  document.getElementById('projectForm').reset();
-  document.getElementById('projectModal').hidden = false;
-});
-
-// Add Service Form
 document.getElementById('serviceForm')?.addEventListener('submit', async (e) => {
   e.preventDefault();
+  if (!hasPermission('content.services')) return;
+
   const form = e.target;
-  const title = form.title.value;
-  const shortDesc = form.shortDesc.value;
-  const features = form.features.value.split(',').map(x => x.trim()).filter(Boolean);
+  const title = form.title.value.trim();
+  const shortDesc = form.shortDesc.value.trim();
+  const features = form.features.value.split(',').map((x) => x.trim()).filter(Boolean);
 
   const newService = {
     id: 'srv-' + Date.now(),
@@ -391,21 +698,74 @@ document.getElementById('serviceForm')?.addEventListener('submit', async (e) => 
     });
     if (res.ok) {
       closeModals();
-      loadAdminData();
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Không thể lưu dịch vụ mới');
     }
   } catch (err) {
-    alert('Không thể lưu dịch vụ mới');
+    alert('Lỗi kết nối máy chủ');
   }
 });
 
-// Add Project Form
+async function deleteService(id) {
+  if (!confirm('Bạn có chắc muốn xóa dịch vụ này khỏi trang chủ?')) return;
+  try {
+    const res = await fetch(`/api/admin/services/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders()
+    });
+    if (res.ok) {
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Không thể xóa dịch vụ');
+    }
+  } catch (err) {
+    alert('Lỗi kết nối máy chủ');
+  }
+}
+
+// ---------------- 9. PROJECTS (content.projects) ----------------
+
+function renderProjectsList() {
+  const list = document.getElementById('adminProjectsList');
+  if (!list || !currentContent || !currentContent.projects) return;
+
+  const canManage = hasPermission('content.projects');
+
+  list.innerHTML = currentContent.projects.map((p) => `
+    <div class="service-admin-item">
+      <div style="display:flex;gap:14px;align-items:center;">
+        <img src="${escapeHtml(p.image)}" style="width:70px;height:50px;object-fit:cover;border-radius:6px;border:1px solid #cbd5e1;" onerror="this.src='/logo.png'">
+        <div>
+          <h4>${escapeHtml(p.title)}</h4>
+          <p>Khách hàng: <strong>${escapeHtml(p.client)}</strong> | Danh mục: <span style="color:#b45309;font-weight:600">${escapeHtml(p.category)}</span></p>
+        </div>
+      </div>
+      <div>
+        ${canManage ? `
+          <button class="btn btn-outline btn-sm" onclick="deleteProject('${p.id}')" style="color:#ef4444;border-color:#fca5a5">Xóa</button>
+        ` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+document.getElementById('btnOpenNewProject')?.addEventListener('click', () => {
+  document.getElementById('projectForm').reset();
+  document.getElementById('projectModal').hidden = false;
+});
+
 document.getElementById('projectForm')?.addEventListener('submit', async (e) => {
   e.preventDefault();
+  if (!hasPermission('content.projects')) return;
+
   const form = e.target;
-  const title = form.title.value;
-  const client = form.client.value;
-  const category = form.category.value;
-  const image = form.image.value || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80';
+  const title = form.title.value.trim();
+  const client = form.client.value.trim();
+  const category = form.category.value.trim();
+  const image = form.image.value.trim() || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80';
 
   const newProject = {
     id: 'proj-' + Date.now(),
@@ -424,38 +784,169 @@ document.getElementById('projectForm')?.addEventListener('submit', async (e) => 
     });
     if (res.ok) {
       closeModals();
-      loadAdminData();
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Không thể lưu dự án mới');
     }
   } catch (err) {
-    alert('Không thể lưu dự án mới');
+    alert('Lỗi kết nối máy chủ');
   }
 });
-
-async function deleteService(id) {
-  if (!confirm('Bạn có chắc muốn xóa dịch vụ này khỏi trang chủ?')) return;
-  try {
-    const res = await fetch(`/api/admin/services/${id}`, { method: 'DELETE', headers: authHeaders() });
-    if (res.ok) loadAdminData();
-  } catch (err) {
-    alert('Không thể xóa dịch vụ');
-  }
-}
 
 async function deleteProject(id) {
   if (!confirm('Bạn có chắc muốn xóa dự án này khỏi trang chủ?')) return;
   try {
-    const res = await fetch(`/api/admin/projects/${id}`, { method: 'DELETE', headers: authHeaders() });
-    if (res.ok) loadAdminData();
+    const res = await fetch(`/api/admin/projects/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders()
+    });
+    if (res.ok) {
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Không thể xóa dự án');
+    }
   } catch (err) {
-    alert('Không thể xóa dự án');
+    alert('Lỗi kết nối máy chủ');
   }
 }
 
-document.getElementById('btnRefreshLeads')?.addEventListener('click', loadAdminData);
+// ---------------- 10. SOCIALS (content.socials) ----------------
 
-function escapeHtml(str) {
-  return String(str || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+function populateSocials() {
+  if (!currentContent) return;
+  const s = currentContent.socials || {};
+  const setZalo = document.getElementById('setZalo');
+  const setFacebook = document.getElementById('setFacebook');
+  const setLinkedin = document.getElementById('setLinkedin');
+  const setYoutube = document.getElementById('setYoutube');
+
+  if (setZalo) setZalo.value = s.zalo || '';
+  if (setFacebook) setFacebook.value = s.facebook || '';
+  if (setLinkedin) setLinkedin.value = s.linkedin || '';
+  if (setYoutube) setYoutube.value = s.youtube || '';
 }
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', loadAdminData);
+document.getElementById('socialsForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!hasPermission('content.socials')) return;
+
+  const indicator = document.getElementById('socialSaveIndicator');
+  const btn = document.getElementById('btnSaveSocials');
+
+  const updatedSocials = {
+    zalo: document.getElementById('setZalo').value.trim(),
+    facebook: document.getElementById('setFacebook').value.trim(),
+    linkedin: document.getElementById('setLinkedin').value.trim(),
+    youtube: document.getElementById('setYoutube').value.trim()
+  };
+
+  if (btn) btn.disabled = true;
+  if (indicator) indicator.textContent = 'Đang lưu...';
+
+  try {
+    const res = await fetch('/api/admin/socials', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ socials: updatedSocials })
+    });
+    if (res.ok) {
+      if (indicator) {
+        indicator.textContent = '✓ Đã cập nhật kênh mạng xã hội thành công!';
+        setTimeout(() => indicator.textContent = '', 3000);
+      }
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      if (indicator) indicator.textContent = 'Lỗi: ' + (err.error || 'Không thể lưu mạng xã hội');
+    }
+  } catch (err) {
+    if (indicator) indicator.textContent = 'Lỗi kết nối máy chủ!';
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+});
+
+// ---------------- 11. SETTINGS & BRAND (content.settings) ----------------
+
+function populateSettings() {
+  if (!currentContent) return;
+  const b = currentContent.brand || {};
+  const setBrandName = document.getElementById('setBrandName');
+  const setHotline = document.getElementById('setHotline');
+  const setEmail = document.getElementById('setEmail');
+  const setWorkingHours = document.getElementById('setWorkingHours');
+  const setAddress = document.getElementById('setAddress');
+  const setAnnouncement = document.getElementById('setAnnouncement');
+
+  if (setBrandName) setBrandName.value = b.name || '';
+  if (setHotline) setHotline.value = b.hotline || '';
+  if (setEmail) setEmail.value = b.email || '';
+  if (setWorkingHours) setWorkingHours.value = b.workingHours || '';
+  if (setAddress) setAddress.value = b.address || '';
+  if (setAnnouncement) setAnnouncement.value = b.announcement || '';
+}
+
+document.getElementById('settingsForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!hasPermission('content.settings')) return;
+
+  const btn = document.getElementById('btnSaveSettings');
+  const indicator = document.getElementById('saveIndicator');
+
+  const updatedBrand = {
+    ...currentContent.brand,
+    name: document.getElementById('setBrandName').value.trim(),
+    hotline: document.getElementById('setHotline').value.trim(),
+    email: document.getElementById('setEmail').value.trim(),
+    workingHours: document.getElementById('setWorkingHours').value.trim(),
+    address: document.getElementById('setAddress').value.trim(),
+    announcement: document.getElementById('setAnnouncement').value.trim()
+  };
+
+  if (btn) btn.disabled = true;
+  if (indicator) indicator.textContent = 'Đang lưu...';
+
+  try {
+    const res = await fetch('/api/admin/settings', {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ brand: updatedBrand })
+    });
+    if (res.ok) {
+      if (indicator) {
+        indicator.textContent = '✓ Đã cập nhật thành công!';
+        setTimeout(() => indicator.textContent = '', 3000);
+      }
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      if (indicator) indicator.textContent = 'Lỗi: ' + (err.error || 'Không thể lưu cấu hình');
+    }
+  } catch (err) {
+    if (indicator) indicator.textContent = 'Lỗi kết nối máy chủ!';
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+});
+
+// ---------------- 12. MODAL HELPERS ----------------
+
+function closeModals() {
+  const serviceModal = document.getElementById('serviceModal');
+  const projectModal = document.getElementById('projectModal');
+  const userModal = document.getElementById('userModal');
+
+  if (serviceModal) serviceModal.hidden = true;
+  if (projectModal) projectModal.hidden = true;
+  if (userModal) userModal.hidden = true;
+}
+
+// Global modal escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModals();
+});
+
+// Khởi chạy khi load trang
+document.addEventListener('DOMContentLoaded', checkAuthAndInit);

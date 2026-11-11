@@ -344,41 +344,45 @@ function renderContent() {
 
   // FAQs Accordion
   const faqAccordion = document.getElementById('faqAccordion');
-  faqAccordion.innerHTML = data.faqs.map((f, i) => `
-    <div class="faq-item ${i === 0 ? 'active' : ''}">
-      <button type="button" class="faq-question">
-        <span>${f.question}</span>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </button>
-      <div class="faq-answer">${f.answer}</div>
-    </div>
-  `).join('');
+  if (faqAccordion && data.faqs) {
+    faqAccordion.innerHTML = (data.faqs || []).map((f, i) => `
+      <div class="faq-item ${i === 0 ? 'active' : ''}">
+        <button type="button" class="faq-question">
+          <span>${escapeHtml(f.question)}</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="faq-answer">${escapeHtml(f.answer)}</div>
+      </div>
+    `).join('');
 
-  document.querySelectorAll('.faq-question').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const item = btn.parentElement;
-      const isActive = item.classList.contains('active');
-      document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('active'));
-      if (!isActive) item.classList.add('active');
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const isActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('active'));
+        if (!isActive) item.classList.add('active');
+      });
     });
-  });
+  }
 
   // Testimonials
   const testimonialsGrid = document.getElementById('testimonialsGrid');
-  testimonialsGrid.innerHTML = data.testimonials.map(t => `
-    <div class="testimonial-card">
-      <p class="t-comment">“${t.comment}”</p>
-      <div class="t-user">
-        <img src="${t.avatar}" alt="${t.name}">
-        <div>
-          <strong>${t.name}</strong>
-          <span>${t.role}</span>
+  if (testimonialsGrid && data.testimonials) {
+    testimonialsGrid.innerHTML = (data.testimonials || []).map(t => `
+      <div class="testimonial-card">
+        <p class="t-comment">“${escapeHtml(t.comment)}”</p>
+        <div class="t-user">
+          <img src="${escapeHtml(t.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80')}" alt="${escapeHtml(t.name)}">
+          <div>
+            <strong>${escapeHtml(t.name)}</strong>
+            <span>${escapeHtml(t.role || '')}</span>
+          </div>
         </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+  }
 
   // Tự động kích hoạt ScrollSpy theo dõi vị trí cuộn trang
   initScrollSpy();

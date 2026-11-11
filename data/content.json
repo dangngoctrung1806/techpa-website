@@ -179,36 +179,43 @@
     ],
     "faqs": [
       {
+        "id": "faq-1",
         "question": "Quy trình khảo sát và báo giá giải pháp CNTT diễn ra như thế nào?",
-        "answer": "Đội ngũ chuyên gia Neotech sẽ tiến hành khảo sát hạ tầng & quy trình hiện tại (miễn phí), sau đó lập bản vẽ kiến trúc cùng dự toán chi tiết trong 3 - 5 ngày làm việc."
+        "answer": "Đội ngũ chuyên gia TechPA sẽ tiến hành khảo sát hạ tầng & quy trình hiện tại (miễn phí), sau đó lập bản vẽ kiến trúc cùng dự toán chi tiết trong 3 - 5 ngày làm việc."
       },
       {
-        "question": "Neotech có hỗ trợ cung ứng thiết bị phần cứng chính hãng đầy đủ CO/CQ không?",
+        "id": "faq-2",
+        "question": "TechPA có hỗ trợ cung ứng thiết bị phần cứng chính hãng đầy đủ CO/CQ không?",
         "answer": "Có. Chúng tôi là đối tác cấp cao của Dell, Cisco, Fortinet, Synology, HPE và Lenovo. Tất cả thiết bị đều có chứng chỉ nguồn gốc CO và chất lượng CQ đầy đủ cho hồ sơ thầu."
       },
       {
+        "id": "faq-3",
         "question": "Thời gian triển khai một dự án chuyển đổi số trung bình mất bao lâu?",
         "answer": "Tùy quy mô: Các gói dịch chuyển Cloud hoặc nâng cấp hạ tầng mạng mất từ 2 - 4 tuần. Với dự án ERP tổng thể hoặc Smart Factory từ 8 - 16 tuần với các mốc bàn giao cụ thể."
       },
       {
+        "id": "faq-4",
         "question": "Chính sách bảo hành và hỗ trợ sau chuyển giao thế nào?",
-        "answer": "Neotech cam kết SLA hỗ trợ 24/7/365, phản hồi sự cố trong 15 phút và có mặt xử lý tại chỗ trong vòng 2 - 4 giờ đối với sự cố hạ tầng trọng yếu."
+        "answer": "TechPA cam kết SLA hỗ trợ 24/7/365, phản hồi sự cố trong 15 phút và có mặt xử lý tại chỗ trong vòng 2 - 4 giờ đối với sự cố hạ tầng trọng yếu."
       }
     ],
     "testimonials": [
       {
+        "id": "testi-1",
         "name": "Nguyễn Hoàng Nam",
         "role": "CTO, VinCommerce Logistics",
         "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
-        "comment": "Neotech đã giúp chúng tôi chuyển dịch toàn bộ hệ thống lên Cloud mà không gián đoạn bất kỳ đơn hàng nào. Hiệu suất tăng vượt bậc và chi phí tối ưu rõ rệt."
+        "comment": "TechPA đã giúp chúng tôi chuyển dịch toàn bộ hệ thống lên Cloud mà không gián đoạn bất kỳ đơn hàng nào. Hiệu suất tăng vượt bậc và chi phí tối ưu rõ rệt."
       },
       {
+        "id": "testi-2",
         "name": "David Harrison",
         "role": "Head of IT, Alpha Global Securities",
         "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
-        "comment": "The cybersecurity and Zero-Trust architecture designed by Neotech met all our stringent compliance requirements. Highly professional engineers."
+        "comment": "Hệ thống bảo mật an ninh mạng và kiến trúc Zero-Trust do TechPA thiết kế đáp ứng vượt trội mọi tiêu chuẩn tuân thủ khắt khe nhất của chúng tôi."
       },
       {
+        "id": "testi-3",
         "name": "Trần Thị Mai Anh",
         "role": "Giám đốc Điều hành, VinaPharma Group",
         "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
@@ -556,36 +563,43 @@
     ],
     "faqs": [
       {
+        "id": "faq-1",
         "question": "What is the consultation and quoting process for IT projects?",
         "answer": "Our experts conduct a comprehensive infrastructure and process audit (free of charge), followed by delivering a customized architecture diagram and detailed budget proposal within 3-5 business days."
       },
       {
+        "id": "faq-2",
         "question": "Does TechPA provide genuine hardware with full CO/CQ certificates?",
         "answer": "Yes. We are certified partners with Dell, Cisco, Fortinet, Synology, HPE, and Lenovo. All delivered equipment includes original Certificate of Origin (CO) and Quality (CQ) for project bidding."
       },
       {
+        "id": "faq-3",
         "question": "How long does an average digital transformation deployment take?",
         "answer": "Cloud migrations or network upgrades typically require 2 to 4 weeks. Enterprise-wide ERP or Smart Factory implementations range from 8 to 16 weeks with agile milestones."
       },
       {
+        "id": "faq-4",
         "question": "What is your post-handover warranty and support SLA?",
         "answer": "TechPA guarantees 24/7/365 support with a 15-minute response SLA for critical incidents and on-site dispatch within 2 to 4 hours for mission-critical hardware."
       }
     ],
     "testimonials": [
       {
+        "id": "testi-1",
         "name": "Nguyen Hoang Nam",
         "role": "CTO, VinCommerce Logistics",
         "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
         "comment": "TechPA migrated our entire core system to the Cloud seamlessly without a single minute of downtime. Performance boosted significantly while cutting operational overhead."
       },
       {
+        "id": "testi-2",
         "name": "David Harrison",
         "role": "Head of IT, Alpha Global Securities",
         "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
         "comment": "The cybersecurity and Zero-Trust architecture delivered by TechPA exceeded all our strict regulatory compliance tests. Highly recommended engineers."
       },
       {
+        "id": "testi-3",
         "name": "Tran Thi Mai Anh",
         "role": "Chief Operating Officer, VinaPharma Group",
         "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",

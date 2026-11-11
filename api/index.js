@@ -111,6 +111,21 @@ router.get('/content', async (req, res) => {
           if (!data.en.blog && seed.en.blog) { data.en.blog = seed.en.blog; needPersist = true; }
         } catch (e) {}
       }
+
+      // Đảm bảo faqs và testimonials đều có id
+      ['vi', 'en'].forEach((lang) => {
+        if (data[lang] && Array.isArray(data[lang].faqs)) {
+          data[lang].faqs.forEach((f, i) => {
+            if (!f.id) { f.id = 'faq-' + (i + 1); needPersist = true; }
+          });
+        }
+        if (data[lang] && Array.isArray(data[lang].testimonials)) {
+          data[lang].testimonials.forEach((t, i) => {
+            if (!t.id) { t.id = 'testi-' + (i + 1); needPersist = true; }
+          });
+        }
+      });
+
       if (needPersist) {
         await store.set('content', data).catch(() => {});
       }
@@ -637,6 +652,168 @@ router.delete('/admin/blog/:id', requireAuth('content.blog'), async (req, res) =
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: 'Lỗi xóa bài viết: ' + err.message });
+  }
+});
+
+// ---------------- FAQS MANAGEMENT (content.faqs) ----------------
+
+// POST /admin/faqs
+router.post('/admin/faqs', requireAuth('content.faqs'), async (req, res) => {
+  try {
+    const { question, answer } = req.body || {};
+    if (!question || !answer) {
+      return res.status(400).json({ error: 'Câu hỏi và câu trả lời không được để trống.' });
+    }
+
+    const content = (await store.get('content')) || {};
+    if (!content.vi) content.vi = {};
+    if (!content.vi.faqs) content.vi.faqs = [];
+
+    const newFaq = {
+      id: 'faq-' + Date.now(),
+      question,
+      answer
+    };
+    content.vi.faqs.push(newFaq);
+
+    if (content.en) {
+      if (!content.en.faqs) content.en.faqs = [];
+      content.en.faqs.push({ ...newFaq });
+    }
+
+    await store.set('content', content);
+    res.json({ success: true, faqs: content.vi.faqs });
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi lưu câu hỏi: ' + err.message });
+  }
+});
+
+// PUT /admin/faqs/:id
+router.put('/admin/faqs/:id', requireAuth('content.faqs'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { question, answer } = req.body || {};
+    const content = (await store.get('content')) || {};
+
+    if (content.vi && content.vi.faqs) {
+      const idx = content.vi.faqs.findIndex((f) => f.id === id);
+      if (idx !== -1) {
+        content.vi.faqs[idx] = { ...content.vi.faqs[idx], question, answer };
+      }
+    }
+    if (content.en && content.en.faqs) {
+      const idx = content.en.faqs.findIndex((f) => f.id === id);
+      if (idx !== -1) {
+        content.en.faqs[idx] = { ...content.en.faqs[idx], question, answer };
+      }
+    }
+
+    await store.set('content', content);
+    res.json({ success: true, faqs: content.vi.faqs });
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi cập nhật câu hỏi: ' + err.message });
+  }
+});
+
+// DELETE /admin/faqs/:id
+router.delete('/admin/faqs/:id', requireAuth('content.faqs'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const content = (await store.get('content')) || {};
+
+    if (content.vi && content.vi.faqs) {
+      content.vi.faqs = content.vi.faqs.filter((f) => f.id !== id);
+    }
+    if (content.en && content.en.faqs) {
+      content.en.faqs = content.en.faqs.filter((f) => f.id !== id);
+    }
+
+    await store.set('content', content);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi xóa câu hỏi: ' + err.message });
+  }
+});
+
+// ---------------- TESTIMONIALS MANAGEMENT (content.testimonials) ----------------
+
+// POST /admin/testimonials
+router.post('/admin/testimonials', requireAuth('content.testimonials'), async (req, res) => {
+  try {
+    const { name, role, avatar, comment } = req.body || {};
+    if (!name || !comment) {
+      return res.status(400).json({ error: 'Họ tên và ý kiến đánh giá không được để trống.' });
+    }
+
+    const content = (await store.get('content')) || {};
+    if (!content.vi) content.vi = {};
+    if (!content.vi.testimonials) content.vi.testimonials = [];
+
+    const newTesti = {
+      id: 'testi-' + Date.now(),
+      name,
+      role: role || '',
+      avatar: avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+      comment
+    };
+    content.vi.testimonials.push(newTesti);
+
+    if (content.en) {
+      if (!content.en.testimonials) content.en.testimonials = [];
+      content.en.testimonials.push({ ...newTesti });
+    }
+
+    await store.set('content', content);
+    res.json({ success: true, testimonials: content.vi.testimonials });
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi lưu đánh giá khách hàng: ' + err.message });
+  }
+});
+
+// PUT /admin/testimonials/:id
+router.put('/admin/testimonials/:id', requireAuth('content.testimonials'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, role, avatar, comment } = req.body || {};
+    const content = (await store.get('content')) || {};
+
+    if (content.vi && content.vi.testimonials) {
+      const idx = content.vi.testimonials.findIndex((t) => t.id === id);
+      if (idx !== -1) {
+        content.vi.testimonials[idx] = { ...content.vi.testimonials[idx], name, role, avatar, comment };
+      }
+    }
+    if (content.en && content.en.testimonials) {
+      const idx = content.en.testimonials.findIndex((t) => t.id === id);
+      if (idx !== -1) {
+        content.en.testimonials[idx] = { ...content.en.testimonials[idx], name, role, avatar, comment };
+      }
+    }
+
+    await store.set('content', content);
+    res.json({ success: true, testimonials: content.vi.testimonials });
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi cập nhật đánh giá: ' + err.message });
+  }
+});
+
+// DELETE /admin/testimonials/:id
+router.delete('/admin/testimonials/:id', requireAuth('content.testimonials'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const content = (await store.get('content')) || {};
+
+    if (content.vi && content.vi.testimonials) {
+      content.vi.testimonials = content.vi.testimonials.filter((t) => t.id !== id);
+    }
+    if (content.en && content.en.testimonials) {
+      content.en.testimonials = content.en.testimonials.filter((t) => t.id !== id);
+    }
+
+    await store.set('content', content);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Lỗi xóa đánh giá: ' + err.message });
   }
 });
 

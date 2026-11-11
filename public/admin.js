@@ -148,6 +148,8 @@ const TAB_TITLES = {
   projects: { title: 'Quản Trị Dự Án Tiêu Biểu', sub: 'Các câu chuyện thành công và case studies' },
   pricing: { title: 'Quản Trị Bảng Giá & Chi Phí', sub: 'Thêm, sửa, xóa các gói giải pháp và bảng giá công nghệ' },
   blog: { title: 'Quản Trị Tin Tức & Bài Viết', sub: 'Đăng tải các bài viết chuyên sâu về Cloud, Cyber Security, ERP và AI' },
+  faqs: { title: 'Quản Trị Câu Hỏi Thường Gặp (FAQ)', sub: 'Giải đáp các thắc mắc phổ biến của khách hàng' },
+  testimonials: { title: 'Quản Trị Ý Kiến Khách Hàng', sub: 'Các đánh giá và cảm nhận từ đối tác doanh nghiệp' },
   socials: { title: 'Cấu Hình Kênh Mạng Xã Hội', sub: 'Đường dẫn Zalo, Facebook, LinkedIn, YouTube' },
   settings: { title: 'Cấu Hình Hệ Thống & Hotline', sub: 'Thông tin thương hiệu TechPA và banner ưu đãi' },
   users: { title: 'Quản Lý Tài Khoản & Phân Quyền', sub: 'Quản lý thành viên, vai trò (Roles) và quyền theo module' }
@@ -223,6 +225,8 @@ async function loadAdminData() {
     if (hasPermission('content.projects')) renderProjectsList();
     if (hasPermission('content.pricing')) renderAdminPricing();
     if (hasPermission('content.blog')) renderAdminBlog();
+    if (hasPermission('content.faqs')) renderAdminFaqs();
+    if (hasPermission('content.testimonials')) renderAdminTestimonials();
     if (hasPermission('content.socials')) populateSocials();
     if (hasPermission('content.settings')) populateSettings();
   } catch (err) {
@@ -1239,7 +1243,251 @@ async function deleteBlog(id) {
   }
 }
 
-// ---------------- 14. MODAL HELPERS ----------------
+// ---------------- 14. FAQS MANAGEMENT (content.faqs) ----------------
+
+function renderAdminFaqs() {
+  const list = document.getElementById('adminFaqsList');
+  if (!list || !currentContent) return;
+
+  const faqs = currentContent.faqs || [];
+  const canManage = hasPermission('content.faqs');
+
+  if (faqs.length === 0) {
+    list.innerHTML = '<p style="padding:20px;color:#64748b;text-align:center;">Chưa có câu hỏi nào. Nhấn "Thêm câu hỏi mới" để tạo câu hỏi đầu tiên.</p>';
+    return;
+  }
+
+  list.innerHTML = faqs.map((f, i) => `
+    <div class="service-admin-item" style="display:flex;justify-content:space-between;align-items:flex-start;padding:16px;border-bottom:1px solid #e2e8f0;">
+      <div style="flex:1;padding-right:16px;">
+        <h4 style="margin:0 0 6px 0;font-size:15px;font-weight:700;color:#0f172a;">${i + 1}. ${escapeHtml(f.question)}</h4>
+        <p style="margin:0;color:#475569;font-size:14px;line-height:1.6;">${escapeHtml(f.answer)}</p>
+      </div>
+      <div style="display:flex;gap:8px;white-space:nowrap;">
+        ${canManage ? `
+          <button class="btn btn-outline btn-sm" onclick="openEditFaq('${f.id}')">Sửa</button>
+          <button class="btn btn-outline btn-sm" onclick="deleteFaq('${f.id}')" style="color:#ef4444;border-color:#fca5a5;">Xóa</button>
+        ` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function openNewFaq() {
+  const form = document.getElementById('faqForm');
+  if (form) form.reset();
+  const editId = document.getElementById('faqEditId');
+  if (editId) editId.value = '';
+  const title = document.getElementById('modalFaqTitle');
+  if (title) title.textContent = 'Thêm Câu Hỏi Mới';
+  const modal = document.getElementById('faqModal');
+  if (modal) modal.hidden = false;
+}
+
+function openEditFaq(id) {
+  const faqs = (currentContent && currentContent.faqs) || [];
+  const faq = faqs.find((f) => f.id === id);
+  if (!faq) return;
+
+  const form = document.getElementById('faqForm');
+  if (form) form.reset();
+  document.getElementById('faqEditId').value = faq.id;
+  document.getElementById('modalFaqTitle').textContent = 'Chỉnh Sửa Câu Hỏi';
+  document.getElementById('faqQuestionInput').value = faq.question || '';
+  document.getElementById('faqAnswerInput').value = faq.answer || '';
+
+  document.getElementById('faqModal').hidden = false;
+}
+
+document.getElementById('btnOpenNewFaq')?.addEventListener('click', openNewFaq);
+
+document.getElementById('faqForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!hasPermission('content.faqs')) return;
+
+  const editId = document.getElementById('faqEditId').value;
+  const question = document.getElementById('faqQuestionInput').value.trim();
+  const answer = document.getElementById('faqAnswerInput').value.trim();
+
+  const payload = { question, answer };
+  const btn = document.getElementById('btnSaveFaq');
+  if (btn) btn.disabled = true;
+
+  try {
+    let res;
+    if (editId) {
+      res = await fetch(`/api/admin/faqs/${editId}`, {
+        method: 'PUT',
+        headers: authHeaders(),
+        body: JSON.stringify(payload)
+      });
+    } else {
+      res = await fetch('/api/admin/faqs', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify(payload)
+      });
+    }
+
+    if (res.ok) {
+      closeModals();
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Không thể lưu câu hỏi');
+    }
+  } catch (err) {
+    alert('Lỗi kết nối máy chủ!');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+});
+
+async function deleteFaq(id) {
+  if (!confirm('Bạn có chắc chắn muốn xóa câu hỏi này?')) return;
+  try {
+    const res = await fetch(`/api/admin/faqs/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders()
+    });
+    if (res.ok) {
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Không thể xóa câu hỏi');
+    }
+  } catch (err) {
+    alert('Lỗi kết nối máy chủ!');
+  }
+}
+
+// ---------------- 15. TESTIMONIALS MANAGEMENT (content.testimonials) ----------------
+
+function renderAdminTestimonials() {
+  const list = document.getElementById('adminTestiList');
+  if (!list || !currentContent) return;
+
+  const testimonials = currentContent.testimonials || [];
+  const canManage = hasPermission('content.testimonials');
+
+  if (testimonials.length === 0) {
+    list.innerHTML = '<p style="padding:20px;color:#64748b;text-align:center;">Chưa có đánh giá nào. Nhấn "Thêm đánh giá mới" để tạo đánh giá đầu tiên.</p>';
+    return;
+  }
+
+  list.innerHTML = testimonials.map((t) => `
+    <div class="service-admin-item" style="display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid #e2e8f0;">
+      <div style="display:flex;gap:14px;align-items:center;flex:1;">
+        <img src="${escapeHtml(t.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80')}" alt="${escapeHtml(t.name)}" style="width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid #fef3c7;">
+        <div>
+          <h4 style="margin:0 0 2px 0;font-size:15px;font-weight:700;color:#0f172a;">${escapeHtml(t.name)}</h4>
+          <span style="font-size:12px;color:#d97706;font-weight:600;display:block;margin-bottom:4px;">${escapeHtml(t.role || '')}</span>
+          <p style="margin:0;color:#475569;font-size:13px;font-style:italic;">“${escapeHtml(t.comment)}”</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-left:16px;white-space:nowrap;">
+        ${canManage ? `
+          <button class="btn btn-outline btn-sm" onclick="openEditTesti('${t.id}')">Sửa</button>
+          <button class="btn btn-outline btn-sm" onclick="deleteTesti('${t.id}')" style="color:#ef4444;border-color:#fca5a5;">Xóa</button>
+        ` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function openNewTesti() {
+  const form = document.getElementById('testiForm');
+  if (form) form.reset();
+  const editId = document.getElementById('testiEditId');
+  if (editId) editId.value = '';
+  const title = document.getElementById('modalTestiTitle');
+  if (title) title.textContent = 'Thêm Đánh Giá Khách Hàng Mới';
+  const modal = document.getElementById('testiModal');
+  if (modal) modal.hidden = false;
+}
+
+function openEditTesti(id) {
+  const testimonials = (currentContent && currentContent.testimonials) || [];
+  const t = testimonials.find((item) => item.id === id);
+  if (!t) return;
+
+  const form = document.getElementById('testiForm');
+  if (form) form.reset();
+  document.getElementById('testiEditId').value = t.id;
+  document.getElementById('modalTestiTitle').textContent = `Chỉnh Sửa: ${t.name}`;
+  document.getElementById('testiNameInput').value = t.name || '';
+  document.getElementById('testiRoleInput').value = t.role || '';
+  document.getElementById('testiAvatarInput').value = t.avatar || '';
+  document.getElementById('testiCommentInput').value = t.comment || '';
+
+  document.getElementById('testiModal').hidden = false;
+}
+
+document.getElementById('btnOpenNewTesti')?.addEventListener('click', openNewTesti);
+
+document.getElementById('testiForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (!hasPermission('content.testimonials')) return;
+
+  const editId = document.getElementById('testiEditId').value;
+  const name = document.getElementById('testiNameInput').value.trim();
+  const role = document.getElementById('testiRoleInput').value.trim();
+  const avatar = document.getElementById('testiAvatarInput').value.trim() || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80';
+  const comment = document.getElementById('testiCommentInput').value.trim();
+
+  const payload = { name, role, avatar, comment };
+  const btn = document.getElementById('btnSaveTesti');
+  if (btn) btn.disabled = true;
+
+  try {
+    let res;
+    if (editId) {
+      res = await fetch(`/api/admin/testimonials/${editId}`, {
+        method: 'PUT',
+        headers: authHeaders(),
+        body: JSON.stringify(payload)
+      });
+    } else {
+      res = await fetch('/api/admin/testimonials', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify(payload)
+      });
+    }
+
+    if (res.ok) {
+      closeModals();
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Không thể lưu đánh giá');
+    }
+  } catch (err) {
+    alert('Lỗi kết nối máy chủ!');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+});
+
+async function deleteTesti(id) {
+  if (!confirm('Bạn có chắc chắn muốn xóa đánh giá này?')) return;
+  try {
+    const res = await fetch(`/api/admin/testimonials/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders()
+    });
+    if (res.ok) {
+      await loadAdminData();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Không thể xóa đánh giá');
+    }
+  } catch (err) {
+    alert('Lỗi kết nối máy chủ!');
+  }
+}
+
+// ---------------- 16. MODAL HELPERS ----------------
 
 function closeModals() {
   const serviceModal = document.getElementById('serviceModal');
@@ -1247,12 +1495,16 @@ function closeModals() {
   const userModal = document.getElementById('userModal');
   const pricingModal = document.getElementById('pricingModal');
   const blogModal = document.getElementById('adminBlogModal');
+  const faqModal = document.getElementById('faqModal');
+  const testiModal = document.getElementById('testiModal');
 
   if (serviceModal) serviceModal.hidden = true;
   if (projectModal) projectModal.hidden = true;
   if (userModal) userModal.hidden = true;
   if (pricingModal) pricingModal.hidden = true;
   if (blogModal) blogModal.hidden = true;
+  if (faqModal) faqModal.hidden = true;
+  if (testiModal) testiModal.hidden = true;
 }
 
 // Global modal escape key

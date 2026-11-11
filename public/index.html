@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechPA - Giải Pháp Công Nghệ & Chuyển Đổi Số</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="/logo.png">
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="container bar-flex">
+      <div class="bar-left" id="announcementText">⚡ Ưu đãi giảm 20% cho gói triển khai Cloud & Bảo mật doanh nghiệp!</div>
+      <div class="bar-right">
+        <span>Hotline: <strong id="barHotline">+84 (028) 3888 9999</strong></span>
+        <span class="divider">|</span>
+        <div class="lang-switch" id="langSwitcher">
+          <!-- VN / EN Buttons by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header & Navigation -->
+  <header class="site-header" id="header">
+    <div class="container header-flex">
+      <a href="#" class="brand-logo">
+        <img src="/logo.png" alt="TechPA Logo" class="logo-img">
+      </a>
+
+      <nav class="main-nav" id="mainNav">
+        <!-- Rendered by JS dynamically -->
+      </nav>
+
+      <div class="header-actions">
+        <a href="#contact" class="btn btn-primary btn-header" id="btnHeaderQuote">
+          Nhận báo giá
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section" id="hero">
+    <div class="hero-shape hero-shape-1"></div>
+    <div class="hero-shape hero-shape-2"></div>
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="tag-badge">
+          <span class="badge-dot"></span>
+          <span id="heroTag">ĐỐI TÁC CÔNG NGHỆ & CHUYỂN ĐỔI SỐ DOANH NGHIỆP</span>
+        </div>
+        <h1 class="hero-title" id="heroTitle">
+          Kiến Tạo Tương Lai Số Với <span class="highlight-gold">Giải Pháp TechPA</span> Toàn Diện
+        </h1>
+        <p class="hero-desc" id="heroDesc">
+          TechPA đồng hành cùng hơn 850+ doanh nghiệp dịch chuyển đám mây, xây dựng phần mềm quản trị ERP, an toàn thông tin Zero-Trust và cung ứng thiết bị phần cứng chính hãng.
+        </p>
+        <div class="hero-buttons">
+          <a href="#services" class="btn btn-primary btn-lg" id="btnHeroExplore">
+            Khám phá dịch vụ
+          </a>
+          <a href="#contact" class="btn btn-outline btn-lg" id="btnHeroConsult">
+            Tư vấn giải pháp miễn phí
+          </a>
+        </div>
+        <div class="client-satisfaction">
+          <div class="avatars-group">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Client">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Client">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&q=80" alt="Client">
+          </div>
+          <div class="satisfaction-text">
+            <strong id="ratingText">4.9 / 5.0 Đánh giá hài lòng</strong>
+            <span id="ratingSub">Hơn 850+ đối tác doanh nghiệp tin cậy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="visual-card">
+          <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80" alt="TechPA IT Solutions">
+          <div class="floating-badge badge-top">
+            <div class="badge-icon gold">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </div>
+            <div>
+              <strong id="badgeSecurity">Bảo mật 100%</strong>
+              <span id="badgeSecuritySub">Zero-Trust Enterprise</span>
+            </div>
+          </div>
+          <div class="floating-badge badge-bottom">
+            <div class="badge-icon green">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div>
+              <strong id="badgeSavings">Tiết kiệm 35%</strong>
+              <span id="badgeSavingsSub">Chi phí vận hành hạ tầng</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Partner Logos Marquee -->
+  <section class="partner-marquee">
+    <div class="container">
+      <p class="partner-title" id="partnerHeading">ĐỐI TÁC CÔNG NGHỆ CHIẾN LƯỢC TOÀN CẦU</p>
+      <div class="logo-track" id="partnerTrack">
+        <!-- populated by js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="section about-section" id="about">
+    <div class="container about-grid">
+      <div class="about-images">
+        <div class="img-wrapper main-img">
+          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="TechPA Team">
+        </div>
+        <div class="experience-badge">
+          <span class="exp-number" id="expNumber">15+</span>
+          <span class="exp-text" id="expText">Năm Kiến Tạo Giải Pháp IT</span>
+        </div>
+      </div>
+
+      <div class="about-content">
+        <div class="section-tag" id="aboutTag">VỀ TECHPA</div>
+        <h2 class="section-title" id="aboutTitle">
+          Chúng Tôi Luôn Mang Lại <span class="highlight-gold">Giải Pháp Đột Phá</span> Cho Doanh Nghiệp
+        </h2>
+        <p class="section-desc" id="aboutDesc">
+          TechPA là đối tác công nghệ chiến lược chuyên tư vấn chuyển đổi số, tối ưu hóa hạ tầng điện toán đám mây và triển khai các thiết bị phần cứng máy chủ, an ninh bảo mật chuẩn quốc tế.
+        </p>
+        <div class="feature-checklist">
+          <div class="check-item">
+            <div class="check-icon">✓</div>
+            <div>
+              <h4 id="aboutCheck1Title">Đội ngũ kỹ sư chứng chỉ quốc tế</h4>
+              <p id="aboutCheck1Desc">Hơn 120 chuyên gia sở hữu chứng chỉ AWS Solutions Architect, Cisco CCIE, Fortinet NSE và PMP.</p>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-icon">✓</div>
+            <div>
+              <h4 id="aboutCheck2Title">Cam kết Uptime 99.99% & Hỗ trợ 24/7</h4>
+              <p id="aboutCheck2Desc">Đường dây nóng kỹ thuật phản hồi chỉ trong 15 phút, đồng hành bảo vệ liên tục mọi lúc mọi nơi.</p>
+            </div>
+          </div>
+        </div>
+        <a href="#contact" class="btn btn-primary" id="btnExpertConsult" style="margin-top: 24px;">Liên hệ tư vấn chuyên gia</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Grid -->
+  <section class="section services-section" id="services">
+    <div class="container">
+      <div class="text-center section-header">
+        <div class="section-tag" id="servicesTag">DỊCH VỤ CÔNG NGHỆ CHUYÊN SÂU</div>
+        <h2 class="section-title" id="servicesTitle">Hệ Sinh Thái Dịch Vụ <span class="highlight-gold">Toàn Diện Của TechPA</span></h2>
+        <p class="section-desc max-600" id="servicesDesc">Được thiết kế tối ưu hóa riêng theo từng ngành nghề để gia tăng hiệu suất và bảo mật bền vững.</p>
+      </div>
+
+      <div class="services-grid" id="servicesGrid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section class="section projects-section" id="projects">
+    <div class="container">
+      <div class="projects-top">
+        <div>
+          <div class="section-tag" id="projectsTag">DỰ ÁN TIÊU BIỂU</div>
+          <h2 class="section-title" id="projectsTitle">Các Dự Án Đã <span class="highlight-gold">Triển Khai Thành Công</span></h2>
+        </div>
+        <a href="#contact" class="btn btn-outline" id="btnViewAllProjects">Xem tất cả dự án →</a>
+      </div>
+
+      <div class="projects-grid" id="projectsGrid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Accordion -->
+  <section class="section faq-section" id="faqs">
+    <div class="container faq-grid">
+      <div class="faq-left">
+        <div class="section-tag" id="faqTag">CÂU HỎI THƯỜNG GẶP</div>
+        <h2 class="section-title" id="faqTitle">Bạn Có Thắc Mắc Về <span class="highlight-gold">Dự Án Của Mình?</span></h2>
+        <p class="section-desc" id="faqDesc">Dưới đây là một số giải đáp nhanh cho các băn khoăn phổ biến của khách hàng khi hợp tác cùng TechPA.</p>
+        <div class="support-card">
+          <div class="sup-icon">📞</div>
+          <div>
+            <strong id="faqDirectTitle">Cần giải đáp trực tiếp?</strong>
+            <p>Hotline: <a href="tel:02838889999" id="faqPhone">+84 (028) 3888 9999</a></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-right" id="faqAccordion">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="section testimonials-section">
+    <div class="container">
+      <div class="text-center section-header">
+        <div class="section-tag" id="testiTag">ĐÁNH GIÁ KHÁCH HÀNG</div>
+        <h2 class="section-title" id="testiTitle">Khách Hàng Nói Gì Về <span class="highlight-gold">TechPA</span></h2>
+      </div>
+
+      <div class="testimonials-grid" id="testimonialsGrid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form & Social Channels Section -->
+  <section class="section contact-section" id="contact">
+    <div class="container contact-grid">
+      <div class="contact-info">
+        <div class="section-tag" id="contactTag">LIÊN HỆ VỚI CHÚNG TÔI</div>
+        <h2 class="section-title" id="contactTitle">Khởi Động Dự Án Cùng Chuyên Gia Ngay Hôm Nay</h2>
+        <p class="section-desc" id="contactDesc">Gửi thông tin cho chúng tôi hoặc kết nối trực tiếp qua Zalo / Hotline để nhận phản hồi nhanh nhất.</p>
+
+        <div class="info-list">
+          <div class="info-item">
+            <div class="info-icon">📍</div>
+            <div>
+              <strong id="contactAddressLabel">Địa chỉ văn phòng</strong>
+              <span id="contactAddress">Tầng 18, Toà nhà TechPA Tower, Quận 1, TP. HCM</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">✉️</div>
+            <div>
+              <strong id="contactEmailLabel">Email liên hệ</strong>
+              <span id="contactEmail">contact@techpa.vn</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">⏰</div>
+            <div>
+              <strong id="contactHoursLabel">Giờ làm việc</strong>
+              <span id="contactHours">Thứ 2 - Thứ 7: 8:00 - 18:00 (Hỗ trợ kỹ thuật 24/7)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Media Buttons -->
+        <div class="social-connect-box">
+          <span class="social-box-title" id="socialConnectTitle">KẾT NỐI QUA MẠNG XÃ HỘI & TƯ VẤN NHANH:</span>
+          <div class="social-buttons" id="socialButtons">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form-card">
+        <h3 id="contactCardTitle">Nhận Tư Vấn & Báo Giá Nhanh</h3>
+        <p id="contactCardSub">Cam kết phản hồi trong 15 phút làm việc</p>
+        <form id="contactForm">
+          <div class="form-group">
+            <label>Họ và tên *</label>
+            <input type="text" name="name" required placeholder="Nguyễn Văn A">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" name="email" required placeholder="name@company.com">
+            </div>
+            <div class="form-group">
+              <label>Số điện thoại *</label>
+              <input type="tel" name="phone" required placeholder="0901 234 567">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Dịch vụ quan tâm</label>
+            <select name="service">
+              <option value="Cloud Migration">Điện toán đám mây & Hạ tầng Cloud</option>
+              <option value="Cyber Security">An ninh mạng & Zero-Trust</option>
+              <option value="ERP Software">Phần mềm quản trị ERP / CRM</option>
+              <option value="AI Automation">Ứng dụng AI & Tự động hoá</option>
+              <option value="Hardware Solutions">Thiết bị máy chủ & Mạng doanh nghiệp</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Nội dung yêu cầu</label>
+            <textarea name="message" rows="3" placeholder="Mô tả nhu cầu hoặc hiện trạng hệ thống của bạn..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="btnSubmit">
+            Gửi yêu cầu tư vấn
+          </button>
+          <div class="form-message" id="formMessage"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-col about-col">
+        <div class="footer-logo">
+          <img src="/logo.png" alt="TechPA Logo">
+        </div>
+        <p id="footerAboutDesc">TechPA là công ty công nghệ chuyên cung cấp các giải pháp chuyển đổi số toàn diện, dịch chuyển hạ tầng đám mây và an ninh bảo mật cao cấp cho doanh nghiệp Việt Nam.</p>
+        <div class="footer-social-links" id="footerSocials">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4 id="footerColServices">Dịch Vụ IT</h4>
+        <ul>
+          <li><a href="#services">Cloud Computing</a></li>
+          <li><a href="#services">An Ninh Mạng Zero-Trust</a></li>
+          <li><a href="#services">Phát Triển Phần Mềm ERP</a></li>
+          <li><a href="#services">Trí Tuệ Nhân Tạo & AI</a></li>
+          <li><a href="#services">Phần Cứng & Thiết Bị IT</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 id="footerColAbout">Về TechPA</h4>
+        <ul>
+          <li><a href="#about">Giới thiệu công ty</a></li>
+          <li><a href="#projects">Dự án đã triển khai</a></li>
+          <li><a href="#faqs">Câu hỏi thường gặp</a></li>
+          <li><a href="#contact">Liên hệ hợp tác</a></li>
+          <li><a href="#contact">Chính sách bảo mật</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 id="footerColNewsletter">Đăng Ký Nhận Tin</h4>
+        <p id="footerNewsletterDesc">Nhận các bản tin cập nhật xu hướng công nghệ & bảo mật mới nhất hàng tuần.</p>
+        <div class="newsletter-box">
+          <input type="email" placeholder="Email của bạn...">
+          <button class="btn btn-primary" id="footerNewsletterBtn">Gửi</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <span id="footerCopyright">© 2026 TechPA Technology Solutions. Bản quyền đã được bảo lưu.</span>
+      <span>Hệ sinh thái công nghệ chuẩn doanh nghiệp số</span>
+    </div>
+  </footer>
+
+  <!-- Floating Quick Contact Buttons (Zalo + Hotline) -->
+  <div class="floating-contact">
+    <a href="https://zalo.me/0908123456" id="floatingZalo" target="_blank" class="float-btn zalo-btn" title="Chat Zalo với chuyên gia TechPA">
+      <span class="float-icon">Zalo</span>
+    </a>
+    <a href="tel:02838889999" id="floatingPhone" class="float-btn phone-btn" title="Gọi Hotline 24/7">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+    </a>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechPA Admin Portal | Trang Quản Trị Hệ Thống</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="icon" href="/logo.png">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <img src="/logo.png" alt="TechPA Logo" class="logo-img">
+      <div class="logo-text">
+        <strong>Tech<span>PA</span></strong>
+        <small>Portal Quản Trị CMS</small>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-title">TỔNG QUAN</div>
+      <a href="#overview" class="side-link active" data-tab="overview">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"></rect><rect width="7" height="5" x="14" y="3" rx="1"></rect><rect width="7" height="9" x="14" y="12" rx="1"></rect><rect width="7" height="5" x="3" y="16" rx="1"></rect></svg>
+        <span>Dashboard Thống kê</span>
+      </a>
+
+      <div class="nav-group-title">QUẢN LÝ KHÁCH HÀNG & LEADS</div>
+      <a href="#leads" class="side-link" data-tab="leads">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        <span>Yêu cầu Tư vấn (Leads)</span>
+        <span class="badge" id="leadsBadge">0</span>
+      </a>
+
+      <div class="nav-group-title">QUẢN TRỊ NỘI DUNG (CMS)</div>
+      <a href="#menu" class="side-link" data-tab="menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        <span>Menu & Nhãn Hot</span>
+      </a>
+      <a href="#services" class="side-link" data-tab="services">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 16 4-4-4-4"></path><path d="m6 8-4 4 4 4"></path><path d="m14.5 4-5 16"></path></svg>
+        <span>Gói Dịch Vụ Công Nghệ</span>
+      </a>
+      <a href="#projects" class="side-link" data-tab="projects">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg>
+        <span>Dự Án Tiêu Biểu</span>
+      </a>
+      <a href="#socials" class="side-link" data-tab="socials">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+        <span>Kênh Mạng Xã Hội</span>
+      </a>
+      <a href="#settings" class="side-link" data-tab="settings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        <span>Cấu Hình Hotline & Brand</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn btn-outline btn-sm btn-block" id="btnLogout" style="color:#ef4444;border-color:#fca5a5;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>
+        Đăng Xuất
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-title">
+        <h2 id="pageTitle">Dashboard Thống Kê</h2>
+        <span class="sub" id="pageSub">Hệ thống quản lý nội dung & khách hàng tiềm năng TechPA</span>
+      </div>
+      <div class="topbar-user">
+        <div class="user-badge">
+          <span class="status-online"></span>
+          Administrator (Đã xác thực)
+        </div>
+      </div>
+    </header>
+
+    <div class="content-body">
+
+      <!-- TAB 1: OVERVIEW DASHBOARD -->
+      <section id="tab-overview" class="tab-pane active">
+        <div class="stats-cards-grid">
+          <div class="stat-card">
+            <div class="stat-icon gold">📥</div>
+            <div>
+              <span class="stat-label">Tổng yêu cầu tư vấn (Leads)</span>
+              <strong class="stat-val" id="dashTotalLeads">0</strong>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green">⚡</div>
+            <div>
+              <span class="stat-label">Dịch vụ đang kích hoạt</span>
+              <strong class="stat-val" id="dashTotalServices">6</strong>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue">💼</div>
+            <div>
+              <span class="stat-label">Dự án đã công bố</span>
+              <strong class="stat-val" id="dashTotalProjects">4</strong>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon amber">🔥</div>
+            <div>
+              <span class="stat-label">Dịch vụ quan tâm nhiều nhất</span>
+              <strong class="stat-val" id="dashTopService">Cloud & ERP</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="card recent-leads-card">
+          <div class="card-header">
+            <h3>Yêu Cầu Tư Vấn Mới Nhất</h3>
+            <button class="btn btn-outline btn-sm" onclick="switchTab('leads')">Xem tất cả leads →</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Mã số</th>
+                  <th>Họ và tên</th>
+                  <th>Liên hệ</th>
+                  <th>Dịch vụ quan tâm</th>
+                  <th>Thời gian gửi</th>
+                  <th>Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody id="recentLeadsTable">
+                <tr><td colspan="6" class="text-center">Đang tải dữ liệu...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: LEADS LIST -->
+      <section id="tab-leads" class="tab-pane">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Danh Sách Khách Hàng Yêu Cầu Tư Vấn</h3>
+              <p class="card-sub">Dữ liệu được cập nhật theo thời gian thực từ form liên hệ ngoài website</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btnRefreshLeads">Làm mới dữ liệu</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Mã Yêu Cầu</th>
+                  <th>Họ Tên</th>
+                  <th>Email</th>
+                  <th>Số Điện Thoại</th>
+                  <th>Dịch Vụ Chọn</th>
+                  <th>Nội Dung Ghi Chú</th>
+                  <th>Ngày Nhận</th>
+                  <th>Hành Động</th>
+                </tr>
+              </thead>
+              <tbody id="allLeadsTable">
+                <tr><td colspan="8" class="text-center">Chưa có yêu cầu nào</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB MENU: CẤU HÌNH MENU & NHÃN HOT -->
+      <section id="tab-menu" class="tab-pane">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Cấu Hình Menu Điều Hướng & Nhãn Nổi Bật (Hot/New/Sale)</h3>
+              <p class="card-sub">Bạn có thể đổi chữ "Hot", gắn nhãn cho mục khác hoặc tắt nhãn bất kỳ lúc nào.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btnSaveMenu">Lưu Thay Đổi Menu</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Tên Menu Hiển Thị</th>
+                  <th>Đường dẫn liên kết</th>
+                  <th>Nhãn Tag (VD: Hot, New, Pro...)</th>
+                  <th>Màu Sắc Nhãn</th>
+                  <th>Xem trước</th>
+                </tr>
+              </thead>
+              <tbody id="menuConfigTable">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-top: 14px;">
+            <span class="save-indicator" id="menuSaveIndicator"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB SERVICES: DỊCH VỤ -->
+      <section id="tab-services" class="tab-pane">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Quản Trị Các Gói Dịch Vụ Công Nghệ</h3>
+              <p class="card-sub">Thêm, sửa các gói dịch vụ hiển thị tại trang chủ</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btnOpenNewService">Thêm dịch vụ mới +</button>
+          </div>
+          <div class="services-list-admin" id="adminServicesList">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB PROJECTS: DỰ ÁN -->
+      <section id="tab-projects" class="tab-pane">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Quản Trị Danh Mục Dự Án Tiêu Biểu</h3>
+              <p class="card-sub">Các dự án đã triển khai hiển thị trên trang chủ</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btnOpenNewProject">Thêm dự án mới +</button>
+          </div>
+          <div class="projects-list-admin" id="adminProjectsList">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB SOCIALS: CẤU HÌNH ZALO, FACEBOOK, LINKEDIN -->
+      <section id="tab-socials" class="tab-pane">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Cấu Hình Kênh Mạng Xã Hội (Zalo, Facebook, LinkedIn, YouTube)</h3>
+              <p class="card-sub">Các liên kết này hiển thị ở nút nổi góc dưới màn hình, khối Liên hệ và chân trang.</p>
+            </div>
+          </div>
+          <form id="socialsForm" class="settings-form">
+            <div class="form-group">
+              <label>Đường dẫn Zalo Chat / OA (VD: https://zalo.me/0908123456)</label>
+              <input type="text" name="zalo" id="setZalo" placeholder="https://zalo.me/...">
+            </div>
+            <div class="form-group">
+              <label>Đường dẫn Facebook Fanpage</label>
+              <input type="text" name="facebook" id="setFacebook" placeholder="https://facebook.com/...">
+            </div>
+            <div class="form-group">
+              <label>Đường dẫn Trang LinkedIn</label>
+              <input type="text" name="linkedin" id="setLinkedin" placeholder="https://linkedin.com/company/...">
+            </div>
+            <div class="form-group">
+              <label>Kênh YouTube (tùy chọn)</label>
+              <input type="text" name="youtube" id="setYoutube" placeholder="https://youtube.com/@...">
+            </div>
+            <button type="submit" class="btn btn-primary" id="btnSaveSocials">Lưu Kênh Mạng Xã Hội</button>
+            <span class="save-indicator" id="socialSaveIndicator"></span>
+          </form>
+        </div>
+      </section>
+
+      <!-- TAB SETTINGS: BRAND & HOTLINE -->
+      <section id="tab-settings" class="tab-pane">
+        <div class="card">
+          <div class="card-header">
+            <h3>Cấu Hình Thông Tin Thương Hiệu & Hotline</h3>
+          </div>
+          <form id="settingsForm" class="settings-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Tên Thương Hiệu</label>
+                <input type="text" name="brandName" id="setBrandName" required>
+              </div>
+              <div class="form-group">
+                <label>Hotline Hỗ Trợ</label>
+                <input type="text" name="hotline" id="setHotline" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Email Liên Hệ</label>
+                <input type="email" name="email" id="setEmail" required>
+              </div>
+              <div class="form-group">
+                <label>Giờ Làm Việc</label>
+                <input type="text" name="workingHours" id="setWorkingHours" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Địa Chỉ Văn Phòng</label>
+              <input type="text" name="address" id="setAddress" required>
+            </div>
+            <div class="form-group">
+              <label>Thanh Thông Báo Trên Cùng (Announcement Bar)</label>
+              <input type="text" name="announcement" id="setAnnouncement" required>
+            </div>
+            <button type="submit" class="btn btn-primary" id="btnSaveSettings">Lưu Cấu Hình Mới</button>
+            <span class="save-indicator" id="saveIndicator"></span>
+          </form>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Modal Add/Edit Service -->
+  <div class="modal" id="serviceModal" hidden>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalServiceTitle">Thêm Gói Dịch Vụ Mới</h3>
+        <button class="close-btn" onclick="closeModals()">✕</button>
+      </div>
+      <form id="serviceForm">
+        <div class="form-group">
+          <label>Tên dịch vụ *</label>
+          <input type="text" name="title" required placeholder="VD: DevOps & CI/CD Automation">
+        </div>
+        <div class="form-group">
+          <label>Mô tả ngắn gọn *</label>
+          <textarea name="shortDesc" rows="3" required placeholder="Mô tả lợi ích và công nghệ..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Các tính năng chính (phân cách bằng dấu phẩy)</label>
+          <input type="text" name="features" placeholder="Kubernetes, Docker, Jenkins, GitOps">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModals()">Hủy</button>
+          <button type="submit" class="btn btn-primary">Lưu Dịch Vụ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Add Project -->
+  <div class="modal" id="projectModal" hidden>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Thêm Dự Án Mới</h3>
+        <button class="close-btn" onclick="closeModals()">✕</button>
+      </div>
+      <form id="projectForm">
+        <div class="form-group">
+          <label>Tên dự án *</label>
+          <input type="text" name="title" required placeholder="VD: Số hóa nhà máy MES thông minh">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tên khách hàng / Đối tác *</label>
+            <input type="text" name="client" required placeholder="Tập đoàn ABC">
+          </div>
+          <div class="form-group">
+            <label>Phân loại *</label>
+            <input type="text" name="category" required placeholder="Cloud & ERP">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Link ảnh minh họa (URL)</label>
+          <input type="url" name="image" placeholder="https://images.unsplash.com/photo-...">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModals()">Hủy</button>
+          <button type="submit" class="btn btn-primary">Lưu Dự Án</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

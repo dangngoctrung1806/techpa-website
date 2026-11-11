@@ -1,0 +1,588 @@
+{
+  "vi": {
+    "brand": {
+      "name": "TechPA",
+      "shortName": "TechPA",
+      "tagline": "Technology & Digital Transformation Solutions",
+      "announcement": "⚡ Ưu đãi giảm 20% cho gói triển khai Cloud & Bảo mật doanh nghiệp trong tháng này!",
+      "hotline": "+84 (028) 3888 9999",
+      "email": "contact@techpa.vn",
+      "address": "Tầng 18, Toà nhà TechPA Tower, Quận 1, TP. Hồ Chí Minh",
+      "workingHours": "Thứ 2 - Thứ 7: 8:00 - 18:00",
+      "logoUrl": "/logo.png"
+    },
+    "nav": [
+      {
+        "label": "Trang chủ",
+        "link": "#hero",
+        "badge": "Hot"
+      },
+      {
+        "label": "Về chúng tôi",
+        "link": "#about"
+      },
+      {
+        "label": "Dịch vụ IT",
+        "link": "#services",
+        "hasChildren": true
+      },
+      {
+        "label": "Giải pháp",
+        "link": "#features"
+      },
+      {
+        "label": "Dự án",
+        "link": "#projects"
+      },
+      {
+        "label": "Bảng giá",
+        "link": "#pricing"
+      },
+      {
+        "label": "Tin tức",
+        "link": "#blog"
+      },
+      {
+        "label": "Liên hệ",
+        "link": "#contact"
+      }
+    ],
+    "stats": [
+      {
+        "number": "15+",
+        "label": "Năm kinh nghiệm công nghệ"
+      },
+      {
+        "number": "850+",
+        "label": "Dự án chuyển đổi số hoàn thành"
+      },
+      {
+        "number": "99.8%",
+        "label": "Tỷ lệ khách hàng hài lòng"
+      },
+      {
+        "number": "120+",
+        "label": "Chuyên gia kỹ sư IT hàng đầu"
+      }
+    ],
+    "services": [
+      {
+        "id": "srv-1794303284235",
+        "icon": "code",
+        "title": "deemij",
+        "shortDesc": "jjkkkkkk",
+        "features": [
+          "Tư vấn chuyên sâu",
+          "Triển khai bảo hành trọn gói"
+        ]
+      },
+      {
+        "id": "srv-cloud",
+        "icon": "cloud",
+        "title": "Cloud Computing & Migration",
+        "shortDesc": "Tư vấn và dịch chuyển hạ tầng lên đám mây AWS, Azure, Google Cloud an toàn và tối ưu 35% chi phí vận hành.",
+        "features": [
+          "Hybrid Cloud Architecture",
+          "Tự động sao lưu & DR Site",
+          "Giám sát FinOps 24/7"
+        ]
+      },
+      {
+        "id": "srv-security",
+        "icon": "shield-check",
+        "title": "Cyber Security & Zero-Trust",
+        "shortDesc": "Bảo vệ tài sản số và hệ thống trước các nguy cơ Ransomware, tấn công mã độc với giải pháp SOC & NGFW.",
+        "features": [
+          "SOC 24/7 SIEM/EDR",
+          "Đánh giá an ninh & Pentest",
+          "Chuẩn hóa ISO 27001"
+        ]
+      },
+      {
+        "id": "srv-software",
+        "icon": "code",
+        "title": "Custom Software & ERP",
+        "shortDesc": "Thiết kế và lập trình phần mềm quản trị doanh nghiệp may đo, ERP, CRM, mobile app hiệu năng cao.",
+        "features": [
+          "Kiến trúc Microservices",
+          "Tích hợp API đa nền tảng",
+          "Bảo hành mã nguồn trọn đời"
+        ]
+      },
+      {
+        "id": "srv-ai",
+        "icon": "cpu",
+        "title": "AI & Process Automation (RPA)",
+        "shortDesc": "Ứng dụng Trí tuệ nhân tạo, GenAI RAG nội bộ và bot tự động hóa quy trình nghiệp vụ giảm tải 70% thủ công.",
+        "features": [
+          "Chatbot AI tri thức nội bộ",
+          "OCR bóc tách hóa đơn tự động",
+          "RPA tự động hóa quy trình"
+        ]
+      },
+      {
+        "id": "srv-infra",
+        "icon": "server",
+        "title": "IT Infrastructure & Hardware",
+        "shortDesc": "Cung cấp trọn gói thiết bị máy chủ, lưu trữ SAN/NAS, switch mạng và thiết bị hội nghị thông minh chuẩn hãng.",
+        "features": [
+          "Chính hãng CO/CQ Dell, Cisco",
+          "Lắp đặt & cấu hình trọn gói",
+          "Bảo hành tận nơi 24/7"
+        ]
+      },
+      {
+        "id": "srv-analytics",
+        "icon": "bar-chart-3",
+        "title": "Data Analytics & Power BI",
+        "shortDesc": "Xây dựng Data Warehouse và Dashboard quản trị kinh doanh trực quan theo thời gian thực cho ban lãnh đạo.",
+        "features": [
+          "Hợp nhất dữ liệu đa kênh",
+          "Dự báo doanh số bằng ML",
+          "Báo cáo Real-time trên Mobile"
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "id": "proj-1",
+        "category": "Cloud & ERP",
+        "title": "Hệ thống ERP & Cloud Hợp Nhất Cho Chuỗi 150 Điểm Bán Lẻ",
+        "client": "Tập đoàn Bán lẻ FastRetails",
+        "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+        "tag": "Enterprise"
+      },
+      {
+        "id": "proj-2",
+        "category": "Cyber Security",
+        "title": "Trung Tâm Điều Hành An Ninh Mạng SOC 24/7 Cho Ngân Hàng Số",
+        "client": "FinTech Prime Bank",
+        "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+        "tag": "Banking"
+      },
+      {
+        "id": "proj-3",
+        "category": "Smart Factory",
+        "title": "Số Hóa 12 Dây Chuyền Sản Xuất IoT & Thị Giác Máy AI",
+        "client": "Mega Precision Manufacturing",
+        "image": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
+        "tag": "Industry 4.0"
+      },
+      {
+        "id": "proj-4",
+        "category": "AI Automation",
+        "title": "Trợ Lý AI Tri Thức Nội Bộ & OCR Hồ Sơ Bệnh Án",
+        "client": "Hệ thống Bệnh viện Quốc tế CarePlus",
+        "image": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80",
+        "tag": "Healthcare"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Quy trình khảo sát và báo giá giải pháp CNTT diễn ra như thế nào?",
+        "answer": "Đội ngũ chuyên gia Neotech sẽ tiến hành khảo sát hạ tầng & quy trình hiện tại (miễn phí), sau đó lập bản vẽ kiến trúc cùng dự toán chi tiết trong 3 - 5 ngày làm việc."
+      },
+      {
+        "question": "Neotech có hỗ trợ cung ứng thiết bị phần cứng chính hãng đầy đủ CO/CQ không?",
+        "answer": "Có. Chúng tôi là đối tác cấp cao của Dell, Cisco, Fortinet, Synology, HPE và Lenovo. Tất cả thiết bị đều có chứng chỉ nguồn gốc CO và chất lượng CQ đầy đủ cho hồ sơ thầu."
+      },
+      {
+        "question": "Thời gian triển khai một dự án chuyển đổi số trung bình mất bao lâu?",
+        "answer": "Tùy quy mô: Các gói dịch chuyển Cloud hoặc nâng cấp hạ tầng mạng mất từ 2 - 4 tuần. Với dự án ERP tổng thể hoặc Smart Factory từ 8 - 16 tuần với các mốc bàn giao cụ thể."
+      },
+      {
+        "question": "Chính sách bảo hành và hỗ trợ sau chuyển giao thế nào?",
+        "answer": "Neotech cam kết SLA hỗ trợ 24/7/365, phản hồi sự cố trong 15 phút và có mặt xử lý tại chỗ trong vòng 2 - 4 giờ đối với sự cố hạ tầng trọng yếu."
+      }
+    ],
+    "testimonials": [
+      {
+        "name": "Nguyễn Hoàng Nam",
+        "role": "CTO, VinCommerce Logistics",
+        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+        "comment": "Neotech đã giúp chúng tôi chuyển dịch toàn bộ hệ thống lên Cloud mà không gián đoạn bất kỳ đơn hàng nào. Hiệu suất tăng vượt bậc và chi phí tối ưu rõ rệt."
+      },
+      {
+        "name": "David Harrison",
+        "role": "Head of IT, Alpha Global Securities",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+        "comment": "The cybersecurity and Zero-Trust architecture designed by Neotech met all our stringent compliance requirements. Highly professional engineers."
+      },
+      {
+        "name": "Trần Thị Mai Anh",
+        "role": "Giám đốc Điều hành, VinaPharma Group",
+        "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
+        "comment": "Quy trình làm việc minh bạch, đội ngũ kỹ thuật tận tâm. Phần mềm ERP vận hành rất ổn định và dễ sử dụng cho toàn thể nhân sự."
+      }
+    ],
+    "partners": [
+      "Microsoft",
+      "AWS Partner",
+      "Google Cloud",
+      "Cisco Systems",
+      "Dell Technologies",
+      "Fortinet",
+      "Synology Inc",
+      "HPE",
+      "Lenovo Enterprise"
+    ],
+    "socials": {
+      "zalo": "https://zalo.me/0908123456",
+      "facebook": "https://facebook.com/techpa.solutions",
+      "linkedin": "https://linkedin.com/company/techpa-vietnam",
+      "youtube": "https://youtube.com/@techpasolutions"
+    },
+    "ui": {
+      "btnQuote": "Nhận báo giá",
+      "btnExplore": "Khám phá dịch vụ",
+      "btnFreeConsult": "Tư vấn giải pháp miễn phí",
+      "heroTag": "ĐỐI TÁC CÔNG NGHỆ & CHUYỂN ĐỔI SỐ DOANH NGHIỆP",
+      "heroTitle": "Kiến Tạo Tương Lai Số Với",
+      "heroTitleHighlight": "Giải Pháp TechPA",
+      "heroDesc": "TechPA đồng hành cùng hơn 850+ doanh nghiệp dịch chuyển đám mây, xây dựng phần mềm quản trị ERP, an toàn thông tin Zero-Trust và cung ứng thiết bị phần cứng chính hãng.",
+      "ratingText": "4.9 / 5.0 Đánh giá hài lòng",
+      "ratingSub": "Hơn 850+ đối tác doanh nghiệp tin cậy",
+      "badgeSecurity": "Bảo mật 100%",
+      "badgeSecuritySub": "Zero-Trust Enterprise",
+      "badgeSavings": "Tiết kiệm 35%",
+      "badgeSavingsSub": "Chi phí vận hành hạ tầng",
+      "partnerHeading": "ĐỐI TÁC CÔNG NGHỆ CHIẾN LƯỢC TOÀN CẦU",
+      "aboutTag": "VỀ TECHPA",
+      "aboutTitle": "Chúng Tôi Luôn Mang Lại",
+      "aboutTitleHighlight": "Giải Pháp Đột Phá",
+      "aboutDesc": "TechPA là đối tác công nghệ chiến lược chuyên tư vấn chuyển đổi số, tối ưu hóa hạ tầng điện toán đám mây và triển khai các thiết bị phần cứng máy chủ, an ninh bảo mật chuẩn quốc tế.",
+      "aboutCheck1Title": "Đội ngũ kỹ sư chứng chỉ quốc tế",
+      "aboutCheck1Desc": "Hơn 120 chuyên gia sở hữu chứng chỉ AWS Solutions Architect, Cisco CCIE, Fortinet NSE và PMP.",
+      "aboutCheck2Title": "Cam kết Uptime 99.99% & Hỗ trợ 24/7",
+      "aboutCheck2Desc": "Đường dây nóng kỹ thuật phản hồi chỉ trong 15 phút, đồng hành bảo vệ liên tục mọi lúc mọi nơi.",
+      "btnExpertConsult": "Liên hệ tư vấn chuyên gia",
+      "expNumber": "15+",
+      "expText": "Năm Kiến Tạo Giải Pháp IT",
+      "servicesTag": "DỊCH VỤ CÔNG NGHỆ CHUYÊN SÂU",
+      "servicesTitle": "Hệ Sinh Thái Dịch Vụ",
+      "servicesTitleHighlight": "Toàn Diện Của TechPA",
+      "servicesDesc": "Được thiết kế tối ưu hóa riêng theo từng ngành nghề để gia tăng hiệu suất và bảo mật bền vững.",
+      "serviceCardCta": "Nhận báo giá giải pháp",
+      "projectsTag": "DỰ ÁN TIÊU BIỂU",
+      "projectsTitle": "Các Dự Án Đã",
+      "projectsTitleHighlight": "Triển Khai Thành Công",
+      "btnViewAllProjects": "Xem tất cả dự án →",
+      "faqTag": "CÂU HỎI THƯỜNG GẶP",
+      "faqTitle": "Bạn Có Thắc Mắc Về",
+      "faqTitleHighlight": "Dự Án Của Mình?",
+      "faqDesc": "Dưới đây là một số giải đáp nhanh cho các băn khoăn phổ biến của khách hàng khi hợp tác cùng TechPA.",
+      "faqDirectTitle": "Cần giải đáp trực tiếp?",
+      "testiTag": "ĐÁNH GIÁ KHÁCH HÀNG",
+      "testiTitle": "Khách Hàng Nói Gì Về",
+      "contactTag": "LIÊN HỆ VỚI CHÚNG TÔI",
+      "contactTitle": "Khởi Động Dự Án Cùng Chuyên Gia Ngay Hôm Nay",
+      "contactDesc": "Gửi thông tin cho chúng tôi hoặc kết nối trực tiếp qua Zalo / Hotline để nhận phản hồi nhanh nhất.",
+      "contactAddressLabel": "Địa chỉ văn phòng",
+      "contactEmailLabel": "Email liên hệ",
+      "contactHoursLabel": "Giờ làm việc",
+      "socialConnectTitle": "KẾT NỐI QUA MẠNG XÃ HỘI & TƯ VẤN NHANH:",
+      "chatZalo": "Chat Zalo Tư Vấn",
+      "contactCardTitle": "Nhận Tư Vấn & Báo Giá Nhanh",
+      "contactCardSub": "Cam kết phản hồi trong 15 phút làm việc",
+      "formName": "Họ và tên *",
+      "formEmail": "Email *",
+      "formPhone": "Số điện thoại *",
+      "formService": "Dịch vụ quan tâm",
+      "formMessage": "Nội dung yêu cầu",
+      "formSubmitBtn": "Gửi yêu cầu tư vấn",
+      "footerAboutDesc": "TechPA là công ty công nghệ chuyên cung cấp các giải pháp chuyển đổi số toàn diện, dịch chuyển hạ tầng đám mây và an ninh bảo mật cao cấp cho doanh nghiệp Việt Nam.",
+      "footerColServices": "Dịch Vụ IT",
+      "footerColAbout": "Về TechPA",
+      "footerColNewsletter": "Đăng Ký Nhận Tin",
+      "footerNewsletterDesc": "Nhận các bản tin cập nhật xu hướng công nghệ & bảo mật mới nhất hàng tuần.",
+      "footerNewsletterBtn": "Gửi",
+      "footerCopyright": "© 2026 TechPA Technology Solutions. Bản quyền đã được bảo lưu."
+    }
+  },
+  "en": {
+    "brand": {
+      "name": "TechPA",
+      "shortName": "TechPA",
+      "tagline": "Technology & Digital Transformation Solutions",
+      "announcement": "⚡ Special 20% discount on Cloud & Enterprise Security deployment this month!",
+      "hotline": "+84 (028) 3888 9999",
+      "email": "contact@techpa.vn",
+      "address": "18th Floor, TechPA Tower, District 1, Ho Chi Minh City, Vietnam",
+      "workingHours": "Mon - Sat: 8:00 AM - 6:00 PM (24/7 Technical Support)",
+      "logoUrl": "/logo.png"
+    },
+    "nav": [
+      {
+        "label": "Home",
+        "link": "#hero",
+        "badge": "Hot",
+        "badgeColor": "red"
+      },
+      {
+        "label": "About Us",
+        "link": "#about"
+      },
+      {
+        "label": "IT Services",
+        "link": "#services"
+      },
+      {
+        "label": "Solutions",
+        "link": "#services"
+      },
+      {
+        "label": "Case Studies",
+        "link": "#projects"
+      },
+      {
+        "label": "FAQ",
+        "link": "#faqs"
+      },
+      {
+        "label": "Contact",
+        "link": "#contact"
+      }
+    ],
+    "stats": [
+      {
+        "number": "15+",
+        "label": "Years of Technology Experience"
+      },
+      {
+        "number": "850+",
+        "label": "Digital Transformation Projects Completed"
+      },
+      {
+        "number": "99.8%",
+        "label": "Client Satisfaction Rate"
+      },
+      {
+        "number": "120+",
+        "label": "Certified IT Engineers & Architects"
+      }
+    ],
+    "services": [
+      {
+        "id": "srv-cloud",
+        "icon": "cloud",
+        "title": "Cloud Computing & Migration",
+        "shortDesc": "Consulting and migrating enterprise workloads to AWS, Azure, Google Cloud securely, cutting operating costs by 35%.",
+        "features": [
+          "Hybrid Cloud Architecture",
+          "Automated Backup & DR Site",
+          "24/7 FinOps Monitoring"
+        ]
+      },
+      {
+        "id": "srv-security",
+        "icon": "shield-check",
+        "title": "Cyber Security & Zero-Trust",
+        "shortDesc": "Protect digital assets from Ransomware and targeted threats with enterprise SOC 24/7 and Next-Gen Firewalls.",
+        "features": [
+          "24/7 SOC (SIEM / EDR)",
+          "Security Audit & Pentest",
+          "ISO 27001 Compliance"
+        ]
+      },
+      {
+        "id": "srv-software",
+        "icon": "code",
+        "title": "Custom Software & ERP",
+        "shortDesc": "End-to-end software development, tailor-made ERP, CRM, and high-performance cross-platform mobile apps.",
+        "features": [
+          "Microservices Architecture",
+          "Seamless Multi-platform APIs",
+          "Lifetime Source Code Warranty"
+        ]
+      },
+      {
+        "id": "srv-ai",
+        "icon": "cpu",
+        "title": "AI & Process Automation (RPA)",
+        "shortDesc": "Enterprise AI assistants, internal RAG knowledge bases, and software bots reducing repetitive tasks by 70%.",
+        "features": [
+          "Internal Enterprise AI Chatbot",
+          "Automated Document & Invoice OCR",
+          "Workflow Automation (RPA)"
+        ]
+      },
+      {
+        "id": "srv-infra",
+        "icon": "server",
+        "title": "IT Infrastructure & Enterprise Hardware",
+        "shortDesc": "Turnkey provision of enterprise servers, SAN/NAS storage, network switches, and smart meeting rooms from tier-1 brands.",
+        "features": [
+          "Genuine CO/CQ (Dell, Cisco, Fortinet)",
+          "End-to-end Installation & Config",
+          "24/7 On-site Maintenance"
+        ]
+      },
+      {
+        "id": "srv-analytics",
+        "icon": "bar-chart-3",
+        "title": "Data Analytics & Power BI",
+        "shortDesc": "Building scalable Data Warehouses and interactive real-time executive dashboards for data-driven decisions.",
+        "features": [
+          "Multi-channel Data Integration",
+          "Machine Learning Forecasting",
+          "Real-time Mobile Dashboards"
+        ]
+      }
+    ],
+    "projects": [
+      {
+        "id": "proj-1",
+        "category": "Cloud & ERP",
+        "title": "Unified ERP & Cloud Infrastructure for 150 Retail Outlets",
+        "client": "FastRetails Group",
+        "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+        "tag": "Enterprise"
+      },
+      {
+        "id": "proj-2",
+        "category": "Cyber Security",
+        "title": "24/7 Security Operations Center (SOC) for Digital Bank",
+        "client": "Prime Digital Banking",
+        "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+        "tag": "Banking"
+      },
+      {
+        "id": "proj-3",
+        "category": "Smart Factory",
+        "title": "Digitizing 12 SMT Manufacturing Lines with IoT & Computer Vision AI",
+        "client": "Mega Precision Industries",
+        "image": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
+        "tag": "Industry 4.0"
+      },
+      {
+        "id": "proj-4",
+        "category": "AI Automation",
+        "title": "Clinical Knowledge AI Assistant & Medical Records OCR",
+        "client": "CarePlus International Hospital",
+        "image": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80",
+        "tag": "Healthcare"
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What is the consultation and quoting process for IT projects?",
+        "answer": "Our experts conduct a comprehensive infrastructure and process audit (free of charge), followed by delivering a customized architecture diagram and detailed budget proposal within 3-5 business days."
+      },
+      {
+        "question": "Does TechPA provide genuine hardware with full CO/CQ certificates?",
+        "answer": "Yes. We are certified partners with Dell, Cisco, Fortinet, Synology, HPE, and Lenovo. All delivered equipment includes original Certificate of Origin (CO) and Quality (CQ) for project bidding."
+      },
+      {
+        "question": "How long does an average digital transformation deployment take?",
+        "answer": "Cloud migrations or network upgrades typically require 2 to 4 weeks. Enterprise-wide ERP or Smart Factory implementations range from 8 to 16 weeks with agile milestones."
+      },
+      {
+        "question": "What is your post-handover warranty and support SLA?",
+        "answer": "TechPA guarantees 24/7/365 support with a 15-minute response SLA for critical incidents and on-site dispatch within 2 to 4 hours for mission-critical hardware."
+      }
+    ],
+    "testimonials": [
+      {
+        "name": "Nguyen Hoang Nam",
+        "role": "CTO, VinCommerce Logistics",
+        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+        "comment": "TechPA migrated our entire core system to the Cloud seamlessly without a single minute of downtime. Performance boosted significantly while cutting operational overhead."
+      },
+      {
+        "name": "David Harrison",
+        "role": "Head of IT, Alpha Global Securities",
+        "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+        "comment": "The cybersecurity and Zero-Trust architecture delivered by TechPA exceeded all our strict regulatory compliance tests. Highly recommended engineers."
+      },
+      {
+        "name": "Tran Thi Mai Anh",
+        "role": "Chief Operating Officer, VinaPharma Group",
+        "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
+        "comment": "Transparent process, dedicated technical team. The custom ERP operates rock-solid and is very intuitive for our staff."
+      }
+    ],
+    "partners": [
+      "Microsoft",
+      "AWS Partner",
+      "Google Cloud",
+      "Cisco Systems",
+      "Dell Technologies",
+      "Fortinet",
+      "Synology Inc",
+      "HPE",
+      "Lenovo Enterprise"
+    ],
+    "socials": {
+      "zalo": "https://zalo.me/0908123456",
+      "facebook": "https://facebook.com/techpa.solutions",
+      "linkedin": "https://linkedin.com/company/techpa-vietnam",
+      "youtube": "https://youtube.com/@techpasolutions"
+    },
+    "ui": {
+      "btnQuote": "Request a Quote",
+      "btnExplore": "Explore Services",
+      "btnFreeConsult": "Free Consultation",
+      "heroTag": "LEADING DIGITAL TRANSFORMATION PARTNER",
+      "heroTitle": "Empower Your Digital Future With Unified",
+      "heroTitleHighlight": "IT Solutions",
+      "heroDesc": "TechPA empowers 850+ enterprises with cloud migration, custom ERP systems, Zero-Trust cybersecurity, and enterprise hardware.",
+      "ratingText": "4.9 / 5.0 Client Rating",
+      "ratingSub": "Trusted by 850+ enterprise clients",
+      "badgeSecurity": "100% Secure",
+      "badgeSecuritySub": "Zero-Trust Enterprise",
+      "badgeSavings": "Save 35%",
+      "badgeSavingsSub": "Infrastructure Operating Cost",
+      "partnerHeading": "GLOBAL STRATEGIC TECHNOLOGY PARTNERS",
+      "aboutTag": "ABOUT TECHPA",
+      "aboutTitle": "We Always Deliver Breakthrough",
+      "aboutTitleHighlight": "Digital Solutions",
+      "aboutDesc": "TechPA is a strategic technology partner consulting digital transformation, cloud optimization, and international-standard enterprise hardware.",
+      "aboutCheck1Title": "International Certified Engineers",
+      "aboutCheck1Desc": "120+ experts holding AWS Solutions Architect, Cisco CCIE, Fortinet NSE, and PMP credentials.",
+      "aboutCheck2Title": "99.99% Uptime SLA & 24/7 Support",
+      "aboutCheck2Desc": "Technical emergency hotline responds within 15 minutes, ensuring non-stop operations.",
+      "btnExpertConsult": "Consult With an Expert",
+      "expNumber": "15+",
+      "expText": "Years Pioneering IT Solutions",
+      "servicesTag": "IN-DEPTH TECHNOLOGY SERVICES",
+      "servicesTitle": "Comprehensive Service",
+      "servicesTitleHighlight": "Ecosystem",
+      "servicesDesc": "Engineered specifically for each industry to boost productivity and sustainable security.",
+      "serviceCardCta": "Get Solution Quote",
+      "projectsTag": "FEATURED CASE STUDIES",
+      "projectsTitle": "Successfully Delivered",
+      "projectsTitleHighlight": "Projects",
+      "btnViewAllProjects": "View All Projects →",
+      "faqTag": "FREQUENTLY ASKED QUESTIONS",
+      "faqTitle": "Have Questions About",
+      "faqTitleHighlight": "Your Next Project?",
+      "faqDesc": "Here are quick answers to common inquiries from clients partnering with TechPA.",
+      "faqDirectTitle": "Need Immediate Support?",
+      "testiTag": "CLIENT TESTIMONIALS",
+      "testiTitle": "What Global Clients Say About",
+      "contactTag": "CONNECT WITH US",
+      "contactTitle": "Kickstart Your Project With Experts Today",
+      "contactDesc": "Send us your requirements or connect directly via Zalo / Hotline for fastest support.",
+      "contactAddressLabel": "Office Headquarters",
+      "contactEmailLabel": "Official Email",
+      "contactHoursLabel": "Working Hours",
+      "socialConnectTitle": "CONNECT VIA SOCIAL NETWORKS & FAST CHAT:",
+      "chatZalo": "Chat via Zalo",
+      "contactCardTitle": "Get Fast Consultation & Quotation",
+      "contactCardSub": "Guaranteed response within 15 minutes",
+      "formName": "Full Name *",
+      "formEmail": "Business Email *",
+      "formPhone": "Phone Number *",
+      "formService": "Interested Service",
+      "formMessage": "Project Description / Needs",
+      "formSubmitBtn": "Submit Consultation Request",
+      "footerAboutDesc": "TechPA provides comprehensive digital transformation, cloud infrastructure, and cybersecurity solutions for forward-thinking enterprises.",
+      "footerColServices": "IT Services",
+      "footerColAbout": "About TechPA",
+      "footerColNewsletter": "Newsletter",
+      "footerNewsletterDesc": "Subscribe to receive weekly technology trends and enterprise security insights.",
+      "footerNewsletterBtn": "Subscribe",
+      "footerCopyright": "© 2026 TechPA Technology Solutions. All rights reserved."
+    }
+  }
+}

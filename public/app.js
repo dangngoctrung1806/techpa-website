@@ -121,6 +121,30 @@ function renderContent() {
   setText('contactCardSub', ui.contactCardSub);
   setText('btnSubmit', ui.formSubmitBtn);
 
+  // Contact Form Labels & Dynamic Service Options
+  setText('lblFormName', ui.formName || (currentLang === 'en' ? 'Full Name *' : 'Họ và tên *'));
+  setText('lblFormEmail', ui.formEmail || (currentLang === 'en' ? 'Business Email *' : 'Email *'));
+  setText('lblFormPhone', ui.formPhone || (currentLang === 'en' ? 'Phone Number *' : 'Số điện thoại *'));
+  setText('lblFormService', ui.formService || (currentLang === 'en' ? 'Interested Service' : 'Dịch vụ quan tâm'));
+  setText('lblFormMessage', ui.formMessage || (currentLang === 'en' ? 'Project Description / Needs' : 'Nội dung yêu cầu'));
+
+  const nameInput = document.querySelector('input[name="name"]');
+  if (nameInput) nameInput.placeholder = currentLang === 'en' ? 'John Doe' : 'Nguyễn Văn A';
+
+  const msgArea = document.getElementById('contactMessageInput');
+  if (msgArea) {
+    msgArea.placeholder = currentLang === 'en'
+      ? 'Describe your project requirements or IT infrastructure needs...'
+      : 'Mô tả nhu cầu hoặc hiện trạng hệ thống của bạn...';
+  }
+
+  const serviceSelect = document.getElementById('contactServiceSelect');
+  if (serviceSelect && data.services) {
+    serviceSelect.innerHTML = data.services.map((s) => `
+      <option value="${s.title}">${s.title}</option>
+    `).join('');
+  }
+
   // Footer UI
   setText('footerAboutDesc', ui.footerAboutDesc);
   setText('footerColServices', ui.footerColServices);
@@ -129,6 +153,31 @@ function renderContent() {
   setText('footerNewsletterDesc', ui.footerNewsletterDesc);
   setText('footerNewsletterBtn', ui.footerNewsletterBtn);
   setText('footerCopyright', ui.footerCopyright);
+  setText('footerTagline', currentLang === 'en' ? 'Enterprise-grade digital technology ecosystem' : 'Hệ sinh thái công nghệ chuẩn doanh nghiệp số');
+
+  // Footer dynamic service links
+  const footerServicesList = document.getElementById('footerServicesList');
+  if (footerServicesList && data.services) {
+    footerServicesList.innerHTML = data.services.slice(0, 5).map((s) => `
+      <li><a href="#services">${s.title}</a></li>
+    `).join('');
+  }
+
+  // Footer dynamic about links
+  const footerAboutList = document.getElementById('footerAboutList');
+  if (footerAboutList) {
+    footerAboutList.innerHTML = currentLang === 'en' ? `
+      <li><a href="#about">About TechPA</a></li>
+      <li><a href="#projects">Case Studies</a></li>
+      <li><a href="#faqs">FAQ</a></li>
+      <li><a href="#contact">Contact Us</a></li>
+    ` : `
+      <li><a href="#about">Giới thiệu công ty</a></li>
+      <li><a href="#projects">Dự án đã triển khai</a></li>
+      <li><a href="#faqs">Câu hỏi thường gặp</a></li>
+      <li><a href="#contact">Liên hệ hợp tác</a></li>
+    `;
+  }
 
   // Navigation Links
   const mainNav = document.getElementById('mainNav');

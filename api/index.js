@@ -67,6 +67,18 @@ const router = express.Router();
 router.get('/content', async (req, res) => {
   try {
     const data = await store.get('content');
+    if (data && data.vi && data.en) {
+      if (data.vi.brand && data.en.brand) {
+        if (data.vi.brand.address && (!data.en.brand.address || data.en.brand.address.includes('District 1'))) {
+          data.en.brand.address = data.vi.brand.address;
+        }
+        if (data.vi.brand.hotline) data.en.brand.hotline = data.vi.brand.hotline;
+        if (data.vi.brand.email) data.en.brand.email = data.vi.brand.email;
+        if (data.vi.brand.workingHours && (!data.en.brand.workingHours || data.en.brand.workingHours.includes('Mon - Sat'))) {
+          data.en.brand.workingHours = data.vi.brand.workingHours;
+        }
+      }
+    }
     res.json(data || {});
   } catch (err) {
     res.status(500).json({ error: 'Lỗi nạp dữ liệu: ' + err.message });
@@ -590,6 +602,8 @@ router.post('/admin/settings', requireAuth('content.settings'), async (req, res)
       if (brand.hotline) content.en.brand.hotline = brand.hotline;
       if (brand.email) content.en.brand.email = brand.email;
       if (brand.name) content.en.brand.name = brand.name;
+      if (brand.address) content.en.brand.address = brand.address;
+      if (brand.workingHours) content.en.brand.workingHours = brand.workingHours;
     }
 
     await store.set('content', content);

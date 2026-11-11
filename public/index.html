@@ -245,21 +245,21 @@
             <div class="info-icon">📍</div>
             <div>
               <strong id="contactAddressLabel">Địa chỉ văn phòng</strong>
-              <span id="contactAddress">Tầng 18, Toà nhà TechPA Tower, Quận 1, TP. HCM</span>
+              <span id="contactAddress">Số 4 Lê Phụ Trần, Phường Sơn Trà, Thành phố Đà Nẵng, Việt Nam</span>
             </div>
           </div>
           <div class="info-item">
             <div class="info-icon">✉️</div>
             <div>
               <strong id="contactEmailLabel">Email liên hệ</strong>
-              <span id="contactEmail">contact@techpa.vn</span>
+              <span id="contactEmail">support@techpa.vn</span>
             </div>
           </div>
           <div class="info-item">
             <div class="info-icon">⏰</div>
             <div>
               <strong id="contactHoursLabel">Giờ làm việc</strong>
-              <span id="contactHours">Thứ 2 - Thứ 7: 8:00 - 18:00 (Hỗ trợ kỹ thuật 24/7)</span>
+              <span id="contactHours">Thứ 2 - Thứ 7: 8:00 - 18:00</span>
             </div>
           </div>
         </div>
@@ -278,22 +278,22 @@
         <p id="contactCardSub">Cam kết phản hồi trong 15 phút làm việc</p>
         <form id="contactForm">
           <div class="form-group">
-            <label>Họ và tên *</label>
+            <label id="lblFormName">Họ và tên *</label>
             <input type="text" name="name" required placeholder="Nguyễn Văn A">
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Email *</label>
+              <label id="lblFormEmail">Email *</label>
               <input type="email" name="email" required placeholder="name@company.com">
             </div>
             <div class="form-group">
-              <label>Số điện thoại *</label>
+              <label id="lblFormPhone">Số điện thoại *</label>
               <input type="tel" name="phone" required placeholder="0901 234 567">
             </div>
           </div>
           <div class="form-group">
-            <label>Dịch vụ quan tâm</label>
-            <select name="service">
+            <label id="lblFormService">Dịch vụ quan tâm</label>
+            <select name="service" id="contactServiceSelect">
               <option value="Cloud Migration">Điện toán đám mây & Hạ tầng Cloud</option>
               <option value="Cyber Security">An ninh mạng & Zero-Trust</option>
               <option value="ERP Software">Phần mềm quản trị ERP / CRM</option>
@@ -302,8 +302,8 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Nội dung yêu cầu</label>
-            <textarea name="message" rows="3" placeholder="Mô tả nhu cầu hoặc hiện trạng hệ thống của bạn..."></textarea>
+            <label id="lblFormMessage">Nội dung yêu cầu</label>
+            <textarea name="message" id="contactMessageInput" rows="3" placeholder="Mô tả nhu cầu hoặc hiện trạng hệ thống của bạn..."></textarea>
           </div>
           <button type="submit" class="btn btn-primary btn-block" id="btnSubmit">
             Gửi yêu cầu tư vấn
@@ -329,7 +329,7 @@
 
       <div class="footer-col">
         <h4 id="footerColServices">Dịch Vụ IT</h4>
-        <ul>
+        <ul id="footerServicesList">
           <li><a href="#services">Cloud Computing</a></li>
           <li><a href="#services">An Ninh Mạng Zero-Trust</a></li>
           <li><a href="#services">Phát Triển Phần Mềm ERP</a></li>
@@ -340,7 +340,7 @@
 
       <div class="footer-col">
         <h4 id="footerColAbout">Về TechPA</h4>
-        <ul>
+        <ul id="footerAboutList">
           <li><a href="#about">Giới thiệu công ty</a></li>
           <li><a href="#projects">Dự án đã triển khai</a></li>
           <li><a href="#faqs">Câu hỏi thường gặp</a></li>
@@ -361,7 +361,7 @@
 
     <div class="container footer-bottom">
       <span id="footerCopyright">© 2026 TechPA Technology Solutions. Bản quyền đã được bảo lưu.</span>
-      <span>Hệ sinh thái công nghệ chuẩn doanh nghiệp số</span>
+      <span id="footerTagline">Hệ sinh thái công nghệ chuẩn doanh nghiệp số</span>
     </div>
   </footer>
 
@@ -370,7 +370,7 @@
     <a href="https://zalo.me/0908123456" id="floatingZalo" target="_blank" class="float-btn zalo-btn" title="Chat Zalo với chuyên gia TechPA">
       <span class="float-icon">Zalo</span>
     </a>
-    <a href="tel:02838889999" id="floatingPhone" class="float-btn phone-btn" title="Gọi Hotline 24/7">
+    <a href="tel:0934310777" id="floatingPhone" class="float-btn phone-btn" title="Gọi Hotline 0934.310.777">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
     </a>
   </div>
